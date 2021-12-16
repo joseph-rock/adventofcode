@@ -32,15 +32,14 @@ def pt_1(array) -> int:
 
 def pt_2(array) -> int:
     a = np.transpose(array)
-    bit_pos = len(a)
 
     oxy_a = a.copy()
     co2_a = a.copy()
 
     # Oxygen Generator
-    for i in range(bit_pos):
-        rnd = np.mean(oxy_a[i])
-        if rnd >= .5:
+    for i in range(len(a)):
+        avg = np.mean(oxy_a[i])
+        if avg >= .5:
             keep_num = 1
         else:
             keep_num = 0
@@ -49,12 +48,12 @@ def pt_2(array) -> int:
         oxy_a = np.delete(oxy_a, delete_index, 1)
 
     # CO2 Scrubber
-    for i in range(bit_pos):
+    for i in range(len(a)):
         if len(co2_a[i]) == 1:
             break
         else:
-            rnd = np.mean(co2_a[i])
-            if rnd >= 0.5:
+            avg = np.mean(co2_a[i])
+            if avg >= 0.5:
                 keep_num = 0
             else:
                 keep_num = 1
@@ -62,11 +61,13 @@ def pt_2(array) -> int:
             delete_index = [index for index, bit in enumerate(co2_a[i]) if bit != keep_num]
             co2_a = np.delete(co2_a, delete_index, 1)
 
-    # TODO Make less gross
-    oxy_gen =      int("".join(list(map(str, oxy_a.flatten().tolist()))))
-    co2_scrubber = int("".join(list(map(str, co2_a.flatten().tolist()))))
+    oxy_a = oxy_a.flatten().tolist()
+    oxygen_generator = int("".join(list(map(str, oxy_a))))
 
-    return binary2int(oxy_gen) * binary2int(co2_scrubber)
+    co2_a = co2_a.flatten().tolist()
+    co2_scrubber = int("".join(list(map(str, co2_a))))
+
+    return binary2int(oxygen_generator) * binary2int(co2_scrubber)
 
 
 def main():

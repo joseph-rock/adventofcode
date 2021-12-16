@@ -4,7 +4,7 @@ from input_helper import str_list
 
 def get_array() -> np.array:
     in_list = str_list("3")
-    new_list = [list(map(int, [*line])) for line in in_list]
+    new_list = [list(map(int, line)) for line in in_list]
     return np.array(new_list)
 
 
@@ -31,13 +31,9 @@ def pt_1(array) -> int:
 
 
 def pt_2(array) -> int:
-    a = np.transpose(array)
-
-    oxy_a = a.copy()
-    co2_a = a.copy()
-
     # Oxygen Generator
-    for i in range(len(a)):
+    oxy_a = np.transpose(array)
+    for i in range(len(oxy_a)):
         if len(oxy_a[i]) == 1:
             break
         else:
@@ -50,8 +46,12 @@ def pt_2(array) -> int:
             delete_index = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
             oxy_a = np.delete(oxy_a, delete_index, 1)
 
+    oxy_a = oxy_a.flatten().tolist()
+    oxygen_generator = int("".join(list(map(str, oxy_a))))
+
     # CO2 Scrubber
-    for i in range(len(a)):
+    co2_a = np.transpose(array)
+    for i in range(len(co2_a)):
         if len(co2_a[i]) == 1:
             break
         else:
@@ -63,9 +63,6 @@ def pt_2(array) -> int:
 
             delete_index = [index for index, bit in enumerate(co2_a[i]) if bit != keep_num]
             co2_a = np.delete(co2_a, delete_index, 1)
-
-    oxy_a = oxy_a.flatten().tolist()
-    oxygen_generator = int("".join(list(map(str, oxy_a))))
 
     co2_a = co2_a.flatten().tolist()
     co2_scrubber = int("".join(list(map(str, co2_a))))

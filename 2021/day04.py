@@ -1,10 +1,11 @@
 import re
 from input_helper import str_block
 
+
 class Game:
     def __init__(self) -> None:
         self.boards = []
-        self.number = []
+        self.numbers = []
 
 
 def parse_input():
@@ -14,7 +15,7 @@ def parse_input():
     # get the number list
     number_re = re.compile(r'(\d+,?){6,}(\n)')
     number = number_re.match(file).group().strip().split(",")
-    game.number = list(map(int, number))
+    game.numbers = list(map(int, number))
 
     # get all the boards
     board_re = re.compile(r'(\d+\s+){25}(\n|$)')
@@ -27,16 +28,21 @@ def parse_input():
 
     game.boards = boards
 
-    return game
+    return game    
 
 
-def part_1():
-    pass
-        
+def pt_1(game):
+    for board in game.boards:
+        # iter through numbers
+        for num in game.numbers:
+            # replace match with -1
+            # check if winner
+            pass
+
 
 def main():
     game = parse_input()
-    print(game.boards)
+    pt_1(game)
 
 
 main()

@@ -38,14 +38,17 @@ def pt_2(array) -> int:
 
     # Oxygen Generator
     for i in range(len(a)):
-        avg = np.mean(oxy_a[i])
-        if avg >= .5:
-            keep_num = 1
+        if len(oxy_a[i]) == 1:
+            break
         else:
-            keep_num = 0
+            avg = np.mean(oxy_a[i])
+            if avg >= .5:
+                keep_num = 1
+            else:
+                keep_num = 0
 
-        delete_index = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
-        oxy_a = np.delete(oxy_a, delete_index, 1)
+            delete_index = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
+            oxy_a = np.delete(oxy_a, delete_index, 1)
 
     # CO2 Scrubber
     for i in range(len(a)):

@@ -45,8 +45,8 @@ def pt_2(array) -> int:
         else:
             keep_num = 0
 
-        indices = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
-        oxy_a = np.delete(oxy_a, indices, 1)
+        delete_index = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
+        oxy_a = np.delete(oxy_a, delete_index, 1)
 
     # CO2 Scrubber
     for i in range(bit_pos):
@@ -59,8 +59,8 @@ def pt_2(array) -> int:
             else:
                 keep_num = 1
 
-            indices = [index for index, bit in enumerate(co2_a[i]) if bit != keep_num]
-            co2_a = np.delete(co2_a, indices, 1)
+            delete_index = [index for index, bit in enumerate(co2_a[i]) if bit != keep_num]
+            co2_a = np.delete(co2_a, delete_index, 1)
 
     # TODO Make less gross
     oxy_gen =      int("".join(list(map(str, oxy_a.flatten().tolist()))))

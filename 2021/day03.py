@@ -2,13 +2,13 @@ import numpy as np
 from input_helper import str_list
 
 
-def get_array():
+def get_array() -> np.array:
     in_list = str_list("3")
     new_list = [list(map(int, [*line])) for line in in_list]
     return np.array(new_list)
 
 
-def binary2int(binary): 
+def binary2int(binary) -> int: 
     int_val, i = 0, 0
     while(binary != 0): 
         a = binary % 10
@@ -18,7 +18,7 @@ def binary2int(binary):
     return int_val
 
 
-def pt_1(array):
+def pt_1(array) -> int:
     a = np.transpose(array)
 
     g = [round(np.mean(i)) for i in a]
@@ -30,7 +30,7 @@ def pt_1(array):
     return binary2int(gamma) * binary2int(epsilon)
 
 
-def pt_2(array):
+def pt_2(array) -> int:
     a = np.transpose(array)
     bit_pos = len(a)
 

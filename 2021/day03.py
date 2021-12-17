@@ -8,7 +8,7 @@ def get_array() -> np.array:
     return np.array(new_list)
 
 
-def binary2int(binary) -> int: 
+def binary_to_int(binary: int) -> int: 
     int_val, i = 0, 0
     while(binary != 0): 
         a = binary % 10
@@ -18,56 +18,60 @@ def binary2int(binary) -> int:
     return int_val
 
 
-def pt_1(array) -> int:
+def list_to_binary(l: list) -> int:
+    return int("".join(list(map(str, l))))
+
+
+def pt_1(array: np.array) -> int:
     a = np.transpose(array)
 
     g = [round(np.mean(i)) for i in a]
     e = [abs(i-1) for i in g]
 
-    gamma = int("".join(list(map(str, g))))
-    epsilon = int("".join(list(map(str, e))))
+    gamma_binary = list_to_binary(g)
+    epsilon_binary = list_to_binary(e)
 
-    return binary2int(gamma) * binary2int(epsilon)
+    return binary_to_int(gamma_binary) * binary_to_int(epsilon_binary)
 
 
-def pt_2(array) -> int:
+def pt_2(array: np.array) -> int:
     # Oxygen Generator
-    oxy_a = np.transpose(array)
-    for i in range(len(oxy_a)):
-        if len(oxy_a[i]) == 1:
+    oxy_arr = np.transpose(array)
+    for i in range(len(oxy_arr)):
+        if len(oxy_arr[i]) == 1:
             break
         else:
-            avg = np.mean(oxy_a[i])
+            avg = np.mean(oxy_arr[i])
             if avg >= .5:
                 keep_num = 1
             else:
                 keep_num = 0
 
-            delete_index = [index for index, bit in enumerate(oxy_a[i]) if bit != keep_num]
-            oxy_a = np.delete(oxy_a, delete_index, 1)
+            delete_index = [index for index, bit in enumerate(oxy_arr[i]) if bit != keep_num]
+            oxy_arr = np.delete(oxy_arr, delete_index, 1)
 
-    oxy_a = oxy_a.flatten().tolist()
-    oxygen_generator = int("".join(list(map(str, oxy_a))))
+    oxy_list = oxy_arr.flatten().tolist()
+    oxy_binary = list_to_binary(oxy_list)
 
     # CO2 Scrubber
-    co2_a = np.transpose(array)
-    for i in range(len(co2_a)):
-        if len(co2_a[i]) == 1:
+    co2_arr = np.transpose(array)
+    for i in range(len(co2_arr)):
+        if len(co2_arr[i]) == 1:
             break
         else:
-            avg = np.mean(co2_a[i])
+            avg = np.mean(co2_arr[i])
             if avg >= 0.5:
                 keep_num = 0
             else:
                 keep_num = 1
 
-            delete_index = [index for index, bit in enumerate(co2_a[i]) if bit != keep_num]
-            co2_a = np.delete(co2_a, delete_index, 1)
+            delete_index = [index for index, bit in enumerate(co2_arr[i]) if bit != keep_num]
+            co2_arr = np.delete(co2_arr, delete_index, 1)
 
-    co2_a = co2_a.flatten().tolist()
-    co2_scrubber = int("".join(list(map(str, co2_a))))
+    co2_list = co2_arr.flatten().tolist()
+    co2_binary = list_to_binary(co2_list)
 
-    return binary2int(oxygen_generator) * binary2int(co2_scrubber)
+    return binary_to_int(oxy_binary) * binary_to_int(co2_binary)
 
 
 def main():

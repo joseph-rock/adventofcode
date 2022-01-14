@@ -1,5 +1,5 @@
 import re
-from input_helper import str_list
+from common import str_list, print_ans
 
 
 class Instruction:
@@ -105,8 +105,9 @@ def pt_2():
 
 
 def main():
-    print("Part 1:", pt_1())
-    print("Part 2:", pt_2())
+    pt1 = pt_1()
+    pt2 = pt_2()
+    print_ans(pt1, pt2)
     
 
 instructions = read_instructions()

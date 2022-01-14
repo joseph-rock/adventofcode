@@ -1,5 +1,5 @@
 import re
-from input_helper import str_list
+from common import str_list, print_ans
 
 class Bag:
 
@@ -86,19 +86,20 @@ def pt1_ans(color):
         if contains_bag(bag, color):
             count += 1
 
-    print("Part 1:", count - 1)
+    return count - 1
 
 
 def pt2_ans(color):
     bag = get_bag(color)
     count = count_contents(bag)
 
-    print("Part 2:", count - 1)
+    return count - 1
 
 
 def main():
-    pt1_ans("shiny gold")
-    pt2_ans("shiny gold")
+    pt1 = pt1_ans("shiny gold")
+    pt2 = pt2_ans("shiny gold")
+    print_ans(pt1, pt2)
 
 
 bag_list = file_parse()

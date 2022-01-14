@@ -1,5 +1,5 @@
 import re
-from input_helper import str_block
+from common import str_block, print_ans
 
 
 def formatted_notes() -> list:
@@ -31,7 +31,7 @@ def ans_1(group_ans):
         total += len(set(combined_ans))
         combined_ans = ""
 
-    print("Part 1:", total)
+    return total
 
 
 def ans_2(group_ans):
@@ -54,13 +54,14 @@ def ans_2(group_ans):
             
             combined_ans = ""
 
-    print("Part 2:", total)
+    return total
 
 
 def main():
     group_ans = formatted_notes()
-    ans_1(group_ans)
-    ans_2(group_ans)
+    pt1 = ans_1(group_ans)
+    pt2 = ans_2(group_ans)
+    print_ans(pt1, pt2)
 
 
 main()

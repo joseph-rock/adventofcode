@@ -1,5 +1,5 @@
 import re
-from input_helper import str_block
+from common import str_block, print_ans
 
 
 def row_calc(inst):
@@ -37,6 +37,7 @@ def boarding_pass_id(row, col):
 
 
 def open_seats(manifest):
+    manifest.sort()
     plane_seats = []
     for row in range(127):
         for col in range(7):
@@ -73,9 +74,10 @@ def main():
             highest = bpid
         manifest.append([row, col])
 
-    manifest.sort()
-    print("Part 1:", highest)
-    print("Part 2:", open_seats(manifest))
+    pt1 = highest
+    pt2 = open_seats(manifest)
+
+    print_ans(pt1, pt2)
 
 
 main()

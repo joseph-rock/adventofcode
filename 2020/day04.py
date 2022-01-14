@@ -1,5 +1,5 @@
 import re
-from input_helper import str_block
+from common import str_block, print_ans
 
 
 def parse_passports() -> list:
@@ -73,24 +73,24 @@ def all_fields_correct(passport)-> bool:
 
 
 def check_passports(all_passports):
-    pt1_ans = 0
-    pt2_ans = 0
+    pt1 = 0
+    pt2 = 0
 
     for passport in all_passports:
 
         if all_fields_present(passport):
-            pt1_ans += 1
+            pt1 += 1
             
             if all_fields_correct(passport):
-                pt2_ans += 1
+                pt2 += 1
 
-    print("Part 1:", pt1_ans)
-    print("Part 2:", pt2_ans)
+    return pt1, pt2
 
 
 def main():
     all_passports = parse_passports()
-    check_passports(all_passports)
+    pt1, pt2 = check_passports(all_passports)
+    print_ans(pt1, pt2)
 
 
 main()

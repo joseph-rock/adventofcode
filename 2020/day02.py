@@ -1,4 +1,4 @@
-from input_helper import str_list
+from common import str_list, print_ans
 
 
 class PasswordAndPolicy:
@@ -30,11 +30,6 @@ def password_is_valid_pt2(obj):
         and first_char != second_char
 
 
-def neat_print(pt1, pt2):
-    print("Part 1:", pt1, "valid passwords")
-    print("Part 2:", pt2, "valid passwords")
-
-
 def main():
     pt1 = 0
     pt2 = 0
@@ -46,6 +41,6 @@ def main():
         if password_is_valid_pt1(password_and_policy_obj): pt1 += 1
         if password_is_valid_pt2(password_and_policy_obj): pt2 += 1
         
-    neat_print(pt1, pt2)
+    print_ans(pt1, pt2)
 
 main()

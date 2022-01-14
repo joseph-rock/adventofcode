@@ -1,4 +1,4 @@
-from input_helper import str_list
+from common import str_list, print_ans
 
 
 def skip_line_check(y_pos, yn):
@@ -35,16 +35,16 @@ def sled_with_slope(xn, yn):
 
 
 def main():
-    a1 = sled_with_slope(3, 1)
+    pt1 = sled_with_slope(3, 1)
 
     b1 = sled_with_slope(1, 1)
     b2 = sled_with_slope(3, 1)
     b3 = sled_with_slope(5, 1)
     b4 = sled_with_slope(7, 1)
     b5 = sled_with_slope(1, 2)
+    pt2 = b1 * b2 * b3 * b4 * b5
 
-    print("Part 1:", a1)
-    print("Part 2:", b1 * b2 * b3 * b4 * b5)
+    print_ans(pt1, pt2)
 
 
 main()

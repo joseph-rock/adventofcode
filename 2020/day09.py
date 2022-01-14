@@ -1,4 +1,4 @@
-from input_helper import int_list
+from common import int_list, print_ans
 
 
 def get_cursor(preamble_start) -> list:
@@ -57,9 +57,9 @@ def pt_2(num) -> int:
 
 
 def main():
-    num = pt_1()
-    print("Part 1:", num)
-    print("Part 2:", pt_2(num))   
+    pt1 = pt_1()
+    pt2 = pt_2(pt1)
+    print_ans(pt1, pt2)  
 
 
 in_list = int_list("9")

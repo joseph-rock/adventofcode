@@ -1,4 +1,4 @@
-from input_helper import int_list
+from common import int_list, print_ans
 
 
 def pt_1():
@@ -36,6 +36,11 @@ def pt_2():
     return sol[max(joltage_list)]
 
 
+def main():
+    pt1 = pt_1()
+    pt2 = pt_2()
+    print_ans(pt1, pt2)
+
+
 joltage_list = int_list("10")
-print("Part 1:", pt_1())
-print("Part 2:", pt_2())
+main()

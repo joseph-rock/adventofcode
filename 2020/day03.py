@@ -18,7 +18,7 @@ def update_x_pos(x_pos, xn, x_len):
 
 
 def sled_with_slope(xn, yn):
-    sled_map = str_list("3")
+    sled_map = str_list(3)
     tree_count = 0
     x_pos = 0
 

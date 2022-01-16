@@ -2,9 +2,7 @@ import re
 from common import str_block, print_ans
 
 
-def parse_passports() -> list:
-    batch = str_block("4")
-
+def parse_passports(batch) -> list:
     passport_RE = re.compile(r'(.+\n?)+(\n|$)')
     all_passports = passport_RE.finditer(batch)
     passports_list = [formatted_fields(passport) for passport in all_passports]
@@ -88,8 +86,9 @@ def check_passports(all_passports):
 
 
 def main():
-    all_passports = parse_passports()
-    pt1, pt2 = check_passports(all_passports)
+    batch = str_block(4)
+    passports = parse_passports(batch)
+    pt1, pt2 = check_passports(passports)
     print_ans(pt1, pt2)
 
 

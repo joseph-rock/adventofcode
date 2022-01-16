@@ -11,11 +11,8 @@ class Bag:
 
 
 def file_parse() -> list:
-    input_list = str_list("7")
-
-    bag_list = [bag_constructor(line) for line in input_list]
-
-    return bag_list
+    input_list = str_list(7)
+    return [bag_constructor(line) for line in input_list]
 
 
 def bag_constructor(line) -> Bag:

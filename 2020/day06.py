@@ -2,9 +2,7 @@ import re
 from common import str_block, print_ans
 
 
-def formatted_notes() -> list:
-    my_notes = str_block("6")
-
+def formatted_notes(my_notes) -> list:
     groups_RE = re.compile(r'(\w+\n?)+(\n|$)')
     organized_notes = groups_RE.finditer(my_notes)
     
@@ -58,7 +56,8 @@ def ans_2(group_ans):
 
 
 def main():
-    group_ans = formatted_notes()
+    my_notes = str_block(6)
+    group_ans = formatted_notes(my_notes)
     pt1 = ans_1(group_ans)
     pt2 = ans_2(group_ans)
     print_ans(pt1, pt2)

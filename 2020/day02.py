@@ -31,10 +31,10 @@ def password_is_valid_pt2(obj):
 
 
 def main():
+    passwords = str_list(2)
     pt1 = 0
     pt2 = 0
 
-    passwords = str_list("2")
     for password in passwords:
         password_and_policy_obj = build_PasswordAndPolicy(password)
 

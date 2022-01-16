@@ -11,7 +11,7 @@ class Instruction:
 
 
 def read_instructions() -> list:
-    input_list = str_list("8")
+    input_list = str_list(8)
     instructions = [construct_instruction(line) for line in input_list]
 
     return instructions

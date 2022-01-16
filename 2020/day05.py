@@ -58,7 +58,7 @@ def open_seats(manifest):
 
 
 def main():
-    inst_list = str_block("5")
+    inst_list = str_block(5)
     highest = 0
 
     inst_RE = re.compile(r'(\w\w\w\w\w\w\w)(\w\w\w)(\n|$)')

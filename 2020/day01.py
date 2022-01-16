@@ -15,13 +15,8 @@ def part_two(expense_report):
     return -1
 
 
-def print_ans(pt1, pt2):
-    print(f"Part 1: {pt1}")
-    print(f"Part 2: {pt2}")
-
-
 def main():
-    expense_report = int_list("1")
+    expense_report = int_list(1)
     pt1 = part_one(expense_report)
     pt2 = part_two(expense_report)
     print_ans(pt1, pt2)

@@ -62,5 +62,5 @@ def main():
     print_ans(pt1, pt2)  
 
 
-in_list = int_list("9")
+in_list = int_list(9)
 main()

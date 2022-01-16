@@ -42,5 +42,5 @@ def main():
     print_ans(pt1, pt2)
 
 
-joltage_list = int_list("10")
+joltage_list = int_list(10)
 main()

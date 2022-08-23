@@ -5,42 +5,38 @@ console.log(partOne());
 console.log(partTwo());
 
 function partOne(): number {
-  let chart = seatingChart();
-
-  while (true) {
-    const newChart = flipSeats(chart, adjOccupiedSeats, 4);
-    if (equal(newChart, chart)) {
-      break;
-    }
-    chart = cloneChart(newChart);
-  }
-
-  return totalOccupiedSeats(chart);
+  return totalOccSeats(stableChart(puzzleInput(), adjOccSeats, 4));
 }
 
 function partTwo(): number {
-  let chart = seatingChart();
-
-  while (true) {
-    const newChart = flipSeats(chart, dirOccupiedSeats, 5);
-    if (equal(newChart, chart)) {
-      break;
-    }
-    chart = cloneChart(newChart);
-  }
-
-  return totalOccupiedSeats(chart);
+  return totalOccSeats(stableChart(puzzleInput(), dirOccSeats, 5));
 }
 
 type occSeats = (x: number, y: number, chart: string[][]) => number;
 
-function flipSeats(chart: string[][], fn: occSeats, tol: number): string[][] {
+function stableChart(
+  chart: string[][],
+  occSeats: occSeats,
+  tol: number,
+): string[][] {
+  const newChart = flipSeats(chart, occSeats, tol);
+  if (equal(newChart, chart)) {
+    return newChart;
+  }
+  return stableChart(newChart, occSeats, tol);
+}
+
+function flipSeats(
+  chart: string[][],
+  occSeats: occSeats,
+  tol: number,
+): string[][] {
   const newChart = cloneChart(chart);
   for (let y = 0; y < chart.length; y++) {
     for (let x = 0; x < chart[0].length; x++) {
-      if (chart[y][x] == "L" && fn(x, y, chart) == 0) {
+      if (chart[y][x] == "L" && occSeats(x, y, chart) == 0) {
         newChart[y][x] = "#";
-      } else if (chart[y][x] == "#" && fn(x, y, chart) >= tol) {
+      } else if (chart[y][x] == "#" && occSeats(x, y, chart) >= tol) {
         newChart[y][x] = "L";
       }
     }
@@ -48,7 +44,7 @@ function flipSeats(chart: string[][], fn: occSeats, tol: number): string[][] {
   return newChart;
 }
 
-function adjOccupiedSeats(x: number, y: number, chart: string[][]): number {
+function adjOccSeats(x: number, y: number, chart: string[][]): number {
   const c = "#";
 
   let counter = 0;
@@ -67,12 +63,12 @@ function adjOccupiedSeats(x: number, y: number, chart: string[][]): number {
   return counter;
 }
 
-function dirOccupiedSeats(x: number, y: number, chart: string[][]): number {
+function dirOccSeats(x: number, y: number, chart: string[][]): number {
   let counter = 0;
 
   for (let ys = -1; ys <= 1; ys++) {
     for (let xs = -1; xs <= 1; xs++) {
-      if (!slopeIsZero(xs, ys) && directionIsOccupied(x, y, xs, ys, chart)) {
+      if (!slopeIsZero(xs, ys) && dirIsOcc(x, y, xs, ys, chart)) {
         counter++;
       }
     }
@@ -81,7 +77,7 @@ function dirOccupiedSeats(x: number, y: number, chart: string[][]): number {
   return counter;
 }
 
-function directionIsOccupied(
+function dirIsOcc(
   x: number,
   y: number,
   xs: number,
@@ -94,10 +90,10 @@ function directionIsOccupied(
   if (chart[y + ys][x + xs] == "#") {
     return true;
   }
-  return (directionIsOccupied(x + xs, y + ys, xs, ys, chart));
+  return (dirIsOcc(x + xs, y + ys, xs, ys, chart));
 }
 
-function seatingChart(): string[][] {
+function puzzleInput(): string[][] {
   const input = Deno.readTextFileSync("../../input/2020/day11.txt");
   return mod.chunked([...input].filter((c) => c != "\n"), input.indexOf("\n"));
 }
@@ -110,7 +106,7 @@ function indexInRange(x: number, y: number, chart: string[][]): boolean {
   return x >= 0 && x < chart[0].length && y >= 0 && y < chart.length;
 }
 
-function totalOccupiedSeats(chart: string[][]): number {
+function totalOccSeats(chart: string[][]): number {
   return chart.flat(2).filter((ch) => ch == "#").length;
 }
 

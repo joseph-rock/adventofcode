@@ -2,7 +2,7 @@ import * as mod from "https://deno.land/std@0.103.0/collections/mod.ts";
 import { equal } from "https://deno.land/x/equal@v1.5.0/equal.ts";
 
 function seatingChart(): string[][] {
-  const input = Deno.readTextFileSync("./input/day11input.txt");
+  const input = Deno.readTextFileSync("../../input/2020/day11.txt");
   return mod.chunked([...input].filter((c) => c != "\n"), input.indexOf("\n"));
 }
 

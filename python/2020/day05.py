@@ -1,5 +1,5 @@
 import re
-from common import str_block, print_ans
+from common2020 import str_block, print_ans
 
 
 def row_calc(inst):

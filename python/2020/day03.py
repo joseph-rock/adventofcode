@@ -1,4 +1,4 @@
-from common import str_list, print_ans
+from common2020 import str_list, print_ans
 
 
 def skip_line_check(y_pos, yn):

@@ -1,5 +1,5 @@
 import re
-from common import str_list, print_ans
+from common2020 import str_list, print_ans
 
 
 class Instruction:

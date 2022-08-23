@@ -1,4 +1,4 @@
-from input_helper import str_list
+from common2021 import str_list
 
 
 def read_input() -> list:

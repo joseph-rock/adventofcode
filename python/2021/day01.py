@@ -1,4 +1,4 @@
-from input_helper import int_list
+from common2021 import int_list
 
 def solve(readings, window_size) -> int:
     return sum(b > a for a, b in zip(readings, readings[window_size:]))

@@ -1,4 +1,4 @@
-from common import int_list, print_ans
+from common2020 import int_list, print_ans
 
 def part_one(expense_report):
     for expense in expense_report:

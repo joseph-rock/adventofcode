@@ -1,5 +1,5 @@
 import re
-from input_helper import str_block
+from common2021 import str_block
 
 
 class Game:

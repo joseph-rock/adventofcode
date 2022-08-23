@@ -1,40 +1,40 @@
 import * as mod from "https://deno.land/std@0.103.0/collections/mod.ts";
 import { equal } from "https://deno.land/x/equal@v1.5.0/equal.ts";
 
-partOne();
-partTwo();
+console.log(partOne());
+console.log(partTwo());
 
-function partOne(): void {
-  let beforeInput = seatingChart();
-
-  while (true) {
-    const afterInput = flipSeats(beforeInput, adjOccupiedSeats, 4);
-    if (equal(afterInput, beforeInput)) {
-      break;
-    }
-    beforeInput = cloneChart(afterInput);
-  }
-
-  console.log(totalOccupiedSeats(beforeInput));
-}
-
-function partTwo(): void {
-  let beforeInput = seatingChart();
+function partOne(): number {
+  let chart = seatingChart();
 
   while (true) {
-    const afterInput = flipSeats(beforeInput, dirOccupiedSeats, 5);
-    if (equal(afterInput, beforeInput)) {
+    const newChart = flipSeats(chart, adjOccupiedSeats, 4);
+    if (equal(newChart, chart)) {
       break;
     }
-    beforeInput = cloneChart(afterInput);
+    chart = cloneChart(newChart);
   }
 
-  console.log(totalOccupiedSeats(beforeInput));
+  return totalOccupiedSeats(chart);
 }
 
-type isOccupied = (x: number, y: number, chart: string[][]) => number;
+function partTwo(): number {
+  let chart = seatingChart();
 
-function flipSeats(chart: string[][], fn: isOccupied, tol: number): string[][] {
+  while (true) {
+    const newChart = flipSeats(chart, dirOccupiedSeats, 5);
+    if (equal(newChart, chart)) {
+      break;
+    }
+    chart = cloneChart(newChart);
+  }
+
+  return totalOccupiedSeats(chart);
+}
+
+type occSeats = (x: number, y: number, chart: string[][]) => number;
+
+function flipSeats(chart: string[][], fn: occSeats, tol: number): string[][] {
   const newChart = cloneChart(chart);
   for (let y = 0; y < chart.length; y++) {
     for (let x = 0; x < chart[0].length; x++) {

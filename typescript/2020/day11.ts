@@ -37,7 +37,44 @@ function adjOccupiedSeats(x: number, y: number, chart: string[][]): number {
   return counter;
 }
 
-function flipSeats(chart: string[][]): string[][] {
+function slopeIsZero(xs: number, ys: number): boolean {
+  return xs == 0 && ys == 0;
+}
+
+function dirOccupiedSeats(x: number, y: number, chart: string[][]): number {
+  let counter = 0;
+
+  for (let ys = -1; ys <= 1; ys++) {
+    for (let xs = -1; xs <= 1; xs++) {
+      if (!slopeIsZero(xs, ys) && directionIsOccupied(x, y, xs, ys, chart)) {
+        counter++;
+      }
+    }
+  }
+
+  return counter;
+}
+
+function directionIsOccupied(
+  x: number,
+  y: number,
+  xs: number,
+  ys: number,
+  chart: string[][],
+): boolean {
+  if (!indexInRange(x + xs, y + ys, chart)) {
+    return false;
+  }
+  if (chart[y + ys][x + xs] == "L") {
+    return false;
+  }
+  if (chart[y + ys][x + xs] == "#") {
+    return true;
+  }
+  return (directionIsOccupied(x + xs, y + ys, xs, ys, chart));
+}
+
+function adjFlipSeats(chart: string[][]): string[][] {
   const newChart = cloneChart(chart);
   for (let y = 0; y < chart.length; y++) {
     for (let x = 0; x < chart[0].length; x++) {
@@ -51,11 +88,39 @@ function flipSeats(chart: string[][]): string[][] {
   return newChart;
 }
 
+function dirFlipSeats(chart: string[][]): string[][] {
+  const newChart = cloneChart(chart);
+  for (let y = 0; y < chart.length; y++) {
+    for (let x = 0; x < chart[0].length; x++) {
+      if (chart[y][x] == "L" && dirOccupiedSeats(x, y, chart) == 0) {
+        newChart[y][x] = "#";
+      } else if (chart[y][x] == "#" && dirOccupiedSeats(x, y, chart) >= 5) {
+        newChart[y][x] = "L";
+      }
+    }
+  }
+  return newChart;
+}
+
 function partOne(): void {
   let beforeInput = seatingChart();
 
   while (true) {
-    const afterInput = flipSeats(beforeInput);
+    const afterInput = adjFlipSeats(beforeInput);
+    if (equal(afterInput, beforeInput)) {
+      break;
+    }
+    beforeInput = cloneChart(afterInput);
+  }
+
+  console.log(totalOccupiedSeats(beforeInput));
+}
+
+function partTwo(): void {
+  let beforeInput = seatingChart();
+
+  while (true) {
+    const afterInput = dirFlipSeats(beforeInput);
     if (equal(afterInput, beforeInput)) {
       break;
     }
@@ -66,3 +131,4 @@ function partOne(): void {
 }
 
 partOne();
+partTwo();

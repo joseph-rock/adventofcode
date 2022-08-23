@@ -88,10 +88,7 @@ function directionIsOccupied(
   ys: number,
   chart: string[][],
 ): boolean {
-  if (!indexInRange(x + xs, y + ys, chart)) {
-    return false;
-  }
-  if (chart[y + ys][x + xs] == "L") {
+  if (!indexInRange(x + xs, y + ys, chart) || chart[y + ys][x + xs] == "L") {
     return false;
   }
   if (chart[y + ys][x + xs] == "#") {

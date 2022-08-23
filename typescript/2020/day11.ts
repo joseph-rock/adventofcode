@@ -6,29 +6,29 @@ function seatingChart(): string[][] {
   return mod.chunked([...input].filter((c) => c != "\n"), input.indexOf("\n"));
 }
 
-function cloneChart(og: string[][]): string[][] {
-  return [...og].map((line) => [...line]);
+function cloneChart(chart: string[][]): string[][] {
+  return [...chart].map((line) => [...line]);
 }
 
-function indexInRange(x: number, y: number, input: string[][]): boolean {
-  return x >= 0 && x < input[0].length && y >= 0 && y < input.length;
+function indexInRange(x: number, y: number, chart: string[][]): boolean {
+  return x >= 0 && x < chart[0].length && y >= 0 && y < chart.length;
 }
 
-function totalOccupiedSeats(input: string[][]): number {
-  return input.flat(2).filter((ch) => ch == "#").length;
+function totalOccupiedSeats(chart: string[][]): number {
+  return chart.flat(2).filter((ch) => ch == "#").length;
 }
 
-function adjOccupiedSeats(x: number, y: number, input: string[][]): number {
+function adjOccupiedSeats(x: number, y: number, chart: string[][]): number {
   const c = "#";
 
   let counter = 0;
-  if (input[y][x] == c) {
+  if (chart[y][x] == c) {
     counter = -1;
   }
 
   for (let iy = y - 1; iy < y + 2; iy++) {
     for (let ix = x - 1; ix < x + 2; ix++) {
-      if (indexInRange(ix, iy, input) && input[iy][ix] == c) {
+      if (indexInRange(ix, iy, chart) && chart[iy][ix] == c) {
         counter++;
       }
     }

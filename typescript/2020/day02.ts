@@ -19,10 +19,13 @@ function passwordPolicy(input: string[]): PasswordPolicy {
 function puzzleInput(): PasswordPolicy[] {
   return input(2020, 2)
     .split("\n")
-    .map((e) => e.replace(":", ""))
-    .map((e) => e.replace("-", " "))
-    .map((e) => e.split(" "))
-    .map((e) => passwordPolicy(e));
+    .map((raw) =>
+      passwordPolicy(
+        raw.replace(":", "")
+          .replace("-", " ")
+          .split(" "),
+      )
+    );
 }
 
 function count(str: string, char: string): number {

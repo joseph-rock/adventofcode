@@ -1,6 +1,9 @@
+import { input } from "../common.ts";
+
 function puzzleInput(): number[] {
-  const input = Deno.readTextFileSync("../../input/2020/day1.txt").split("\n");
-  return input.map((e) => parseInt(e));
+  return input(2020, 1)
+    .split("\n")
+    .map((e) => parseInt(e));
 }
 
 function partOne() {

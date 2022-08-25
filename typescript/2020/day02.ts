@@ -1,3 +1,5 @@
+import { input } from "../common.ts";
+
 interface PasswordPolicy {
   min: number;
   max: number;
@@ -15,8 +17,8 @@ function constructPasswordPolicy(input: string[]): PasswordPolicy {
 }
 
 function puzzleInput(): PasswordPolicy[] {
-  const input = Deno.readTextFileSync("../../input/2020/day2.txt").split("\n");
-  return input
+  return input(2020, 2)
+    .split("\n")
     .map((e) => e.replace(":", ""))
     .map((e) => e.replace("-", " "))
     .map((e) => e.split(" "))

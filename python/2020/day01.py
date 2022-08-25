@@ -11,7 +11,7 @@ def part_two(expense_report):
     for x in expense_report:
         for y in expense_report:
             if 2020 - (x + y) in expense_report:
-                return x * y * (2020 - x + y)
+                return x * y * (2020 - x - y)
     return -1
 
 

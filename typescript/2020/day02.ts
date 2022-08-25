@@ -1,4 +1,4 @@
-import { input } from "../common.ts";
+import { input, print } from "../common.ts";
 
 interface PasswordPolicy {
   min: number;
@@ -45,5 +45,4 @@ function partTwo(): number {
   ).length;
 }
 
-console.log("Part 1:", partOne());
-console.log("Part 2:", partTwo());
+print(partOne(), partTwo());

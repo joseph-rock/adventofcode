@@ -7,7 +7,7 @@ interface PasswordPolicy {
   password: string;
 }
 
-function constructPasswordPolicy(input: string[]): PasswordPolicy {
+function passwordPolicy(input: string[]): PasswordPolicy {
   return {
     min: parseInt(input[0]),
     max: parseInt(input[1]),
@@ -22,7 +22,7 @@ function puzzleInput(): PasswordPolicy[] {
     .map((e) => e.replace(":", ""))
     .map((e) => e.replace("-", " "))
     .map((e) => e.split(" "))
-    .map((e) => constructPasswordPolicy(e));
+    .map((e) => passwordPolicy(e));
 }
 
 function count(str: string, char: string): number {

@@ -5,11 +5,11 @@ console.log(partOne());
 console.log(partTwo());
 
 function partOne(): number {
-  return totalOccSeats(stableChart(puzzleInput(), adjOccSeats, 4));
+  return totalOccSeats(stableChart(chart(), adjOccSeats, 4));
 }
 
 function partTwo(): number {
-  return totalOccSeats(stableChart(puzzleInput(), dirOccSeats, 5));
+  return totalOccSeats(stableChart(chart(), dirOccSeats, 5));
 }
 
 type occSeats = (x: number, y: number, chart: string[][]) => number;
@@ -45,22 +45,16 @@ function flipSeats(
 }
 
 function adjOccSeats(x: number, y: number, chart: string[][]): number {
-  const c = "#";
-
   let counter = 0;
-  if (chart[y][x] == c) {
-    counter = -1;
-  }
-
-  for (let iy = y - 1; iy < y + 2; iy++) {
-    for (let ix = x - 1; ix < x + 2; ix++) {
-      if (indexInRange(ix, iy, chart) && chart[iy][ix] == c) {
+  for (let iy = y - 1; iy <= y + 1; iy++) {
+    for (let ix = x - 1; ix <= x + 1; ix++) {
+      if (indexInRange(ix, iy, chart) && chart[iy][ix] == "#") {
         counter++;
       }
     }
   }
 
-  return counter;
+  return chart[y][x] == "#" ? counter - 1 : counter;
 }
 
 function dirOccSeats(x: number, y: number, chart: string[][]): number {
@@ -93,7 +87,7 @@ function dirIsOcc(
   return (dirIsOcc(x + xs, y + ys, xs, ys, chart));
 }
 
-function puzzleInput(): string[][] {
+function chart(): string[][] {
   const input = Deno.readTextFileSync("../../input/2020/day11.txt");
   return mod.chunked([...input].filter((c) => c != "\n"), input.indexOf("\n"));
 }

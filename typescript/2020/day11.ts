@@ -1,8 +1,5 @@
-import * as mod from "https://deno.land/std@0.103.0/collections/mod.ts";
+import { input, print } from "../common.ts";
 import { equal } from "https://deno.land/x/equal@v1.5.0/equal.ts";
-
-console.log(partOne());
-console.log(partTwo());
 
 function partOne(): number {
   return totalOccSeats(stableChart(chart(), adjOccSeats, 4));
@@ -88,8 +85,9 @@ function dirIsOcc(
 }
 
 function chart(): string[][] {
-  const input = Deno.readTextFileSync("../../input/2020/day11.txt");
-  return mod.chunked([...input].filter((c) => c != "\n"), input.indexOf("\n"));
+  return input(2020, 11)
+    .split("\n")
+    .map((line) => [...line]);
 }
 
 function cloneChart(chart: string[][]): string[][] {
@@ -107,3 +105,5 @@ function totalOccSeats(chart: string[][]): number {
 function slopeIsZero(xs: number, ys: number): boolean {
   return xs == 0 && ys == 0;
 }
+
+print(partOne(), partTwo());

@@ -28,30 +28,31 @@ function flipSeats(
   occSeats: occSeats,
   tol: number,
 ): string[][] {
-  const newChart = cloneChart(chart);
-  for (let y = 0; y < chart.length; y++) {
-    for (let x = 0; x < chart[0].length; x++) {
-      if (chart[y][x] == "L" && occSeats(x, y, chart) == 0) {
-        newChart[y][x] = "#";
-      } else if (chart[y][x] == "#" && occSeats(x, y, chart) >= tol) {
-        newChart[y][x] = "L";
-      }
-    }
+  return chart.map((row, y) =>
+    row.map((char, x) => flipSeat(char, occSeats(x, y, chart), tol))
+  );
+}
+
+function flipSeat(char: string, neighbors: number, tol: number): string {
+  if (char === "L" && neighbors === 0) {
+    return "#";
+  } else if (char === "#" && neighbors >= tol) {
+    return "L";
   }
-  return newChart;
+  return char;
 }
 
 function adjOccSeats(x: number, y: number, chart: string[][]): number {
   let counter = 0;
   for (let iy = y - 1; iy <= y + 1; iy++) {
     for (let ix = x - 1; ix <= x + 1; ix++) {
-      if (indexInRange(ix, iy, chart) && chart[iy][ix] == "#") {
+      if (indexInRange(ix, iy, chart) && chart[iy][ix] === "#") {
         counter++;
       }
     }
   }
 
-  return chart[y][x] == "#" ? counter - 1 : counter;
+  return chart[y][x] === "#" ? counter - 1 : counter;
 }
 
 function dirOccSeats(x: number, y: number, chart: string[][]): number {
@@ -75,10 +76,10 @@ function dirIsOcc(
   ys: number,
   chart: string[][],
 ): boolean {
-  if (!indexInRange(x + xs, y + ys, chart) || chart[y + ys][x + xs] == "L") {
+  if (!indexInRange(x + xs, y + ys, chart) || chart[y + ys][x + xs] === "L") {
     return false;
   }
-  if (chart[y + ys][x + xs] == "#") {
+  if (chart[y + ys][x + xs] === "#") {
     return true;
   }
   return (dirIsOcc(x + xs, y + ys, xs, ys, chart));
@@ -99,11 +100,11 @@ function indexInRange(x: number, y: number, chart: string[][]): boolean {
 }
 
 function totalOccSeats(chart: string[][]): number {
-  return chart.flat(2).filter((ch) => ch == "#").length;
+  return chart.flat(2).filter((ch) => ch === "#").length;
 }
 
 function slopeIsZero(xs: number, ys: number): boolean {
-  return xs == 0 && ys == 0;
+  return xs === 0 && ys === 0;
 }
 
 print(partOne(), partTwo());

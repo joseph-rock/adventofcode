@@ -1,5 +1,5 @@
 import { input, print } from "../common.ts";
-import { equal } from "https://deno.land/x/equal@v1.5.0/equal.ts";
+import { equals } from "https://deno.land/x/ramda@v0.27.2/mod.ts";
 
 function partOne(): number {
   return totalOccSeats(stableChart(chart(), adjOccSeats, 4));
@@ -9,7 +9,12 @@ function partTwo(): number {
   return totalOccSeats(stableChart(chart(), dirOccSeats, 5));
 }
 
-type occSeats = (x: number, y: number, chart: string[][]) => number;
+type occSeats = (coord: coord, chart: string[][]) => number;
+
+interface coord {
+  x: number;
+  y: number;
+}
 
 function stableChart(
   chart: string[][],
@@ -17,7 +22,7 @@ function stableChart(
   tol: number,
 ): string[][] {
   const newChart = flipSeats(chart, occSeats, tol);
-  if (equal(newChart, chart)) {
+  if (equals(newChart, chart)) {
     return newChart;
   }
   return stableChart(newChart, occSeats, tol);
@@ -29,7 +34,7 @@ function flipSeats(
   tol: number,
 ): string[][] {
   return chart.map((row, y) =>
-    row.map((char, x) => flipSeat(char, occSeats(x, y, chart), tol))
+    row.map((char, x) => flipSeat(char, occSeats({ x, y }, chart), tol))
   );
 }
 
@@ -42,25 +47,25 @@ function flipSeat(char: string, neighbors: number, tol: number): string {
   return char;
 }
 
-function adjOccSeats(x: number, y: number, chart: string[][]): number {
+function adjOccSeats(coord: coord, chart: string[][]): number {
   let counter = 0;
-  for (let iy = y - 1; iy <= y + 1; iy++) {
-    for (let ix = x - 1; ix <= x + 1; ix++) {
-      if (indexInRange(ix, iy, chart) && chart[iy][ix] === "#") {
+  for (let iy = coord.y - 1; iy <= coord.y + 1; iy++) {
+    for (let ix = coord.x - 1; ix <= coord.x + 1; ix++) {
+      if (indexInRange(ix, iy) && chart[iy][ix] === "#") {
         counter++;
       }
     }
   }
 
-  return chart[y][x] === "#" ? counter - 1 : counter;
+  return chart[coord.y][coord.x] === "#" ? counter - 1 : counter;
 }
 
-function dirOccSeats(x: number, y: number, chart: string[][]): number {
+function dirOccSeats(coord: coord, chart: string[][]): number {
   let counter = 0;
 
   for (let ys = -1; ys <= 1; ys++) {
     for (let xs = -1; xs <= 1; xs++) {
-      if (!slopeIsZero(xs, ys) && dirIsOcc(x, y, xs, ys, chart)) {
+      if (!slopeIsZero(xs, ys) && dirIsOcc(coord.x, coord.y, xs, ys, chart)) {
         counter++;
       }
     }
@@ -76,7 +81,7 @@ function dirIsOcc(
   ys: number,
   chart: string[][],
 ): boolean {
-  if (!indexInRange(x + xs, y + ys, chart) || chart[y + ys][x + xs] === "L") {
+  if (!indexInRange(x + xs, y + ys) || chart[y + ys][x + xs] === "L") {
     return false;
   }
   if (chart[y + ys][x + xs] === "#") {
@@ -91,12 +96,11 @@ function chart(): string[][] {
     .map((line) => [...line]);
 }
 
-function cloneChart(chart: string[][]): string[][] {
-  return [...chart].map((line) => [...line]);
-}
+const xMax = chart()[0].length;
+const yMax = chart().length;
 
-function indexInRange(x: number, y: number, chart: string[][]): boolean {
-  return x >= 0 && x < chart[0].length && y >= 0 && y < chart.length;
+function indexInRange(x: number, y: number): boolean {
+  return x >= 0 && x < xMax && y >= 0 && y < yMax;
 }
 
 function totalOccSeats(chart: string[][]): number {

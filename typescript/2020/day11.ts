@@ -1,6 +1,14 @@
 import { input, print } from "../common.ts";
 import { equals } from "https://deno.land/x/ramda@v0.27.2/mod.ts";
 
+interface coord {
+  x: number;
+  y: number;
+}
+
+const xMax = chart()[0].length;
+const yMax = chart().length;
+
 function partOne(): number {
   return totalOccSeats(stableChart(chart(), adjOccSeats, 4));
 }
@@ -10,11 +18,6 @@ function partTwo(): number {
 }
 
 type occSeats = (coord: coord, chart: string[][]) => number;
-
-interface coord {
-  x: number;
-  y: number;
-}
 
 function stableChart(
   chart: string[][],
@@ -95,9 +98,6 @@ function chart(): string[][] {
     .split("\n")
     .map((line) => [...line]);
 }
-
-const xMax = chart()[0].length;
-const yMax = chart().length;
 
 function indexInRange(x: number, y: number): boolean {
   return x >= 0 && x < xMax && y >= 0 && y < yMax;

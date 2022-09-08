@@ -1,10 +1,10 @@
 import { input, print } from "../common.ts";
 
+const xMax = hill()[0].length;
+
 function hill() {
   return input(2020, 3).split("\n").map((line) => [...line]);
 }
-
-const xMax = hill()[0].length;
 
 function moveRight(position: number, amount: number): number {
   return position + amount >= xMax
@@ -26,4 +26,16 @@ function sledWithSlope(x: number, y: number, hill: string[][]) {
   return count;
 }
 
-console.log(sledWithSlope(3, 1, hill()));
+function partOne(hill: string[][]): number {
+  return sledWithSlope(3, 1, hill);
+}
+
+function partTwo(hill: string[][]): number {
+  return sledWithSlope(1, 1, hill) *
+    sledWithSlope(3, 1, hill) *
+    sledWithSlope(5, 1, hill) *
+    sledWithSlope(7, 1, hill) *
+    sledWithSlope(1, 2, hill);
+}
+
+print(partOne(hill()), partTwo(hill()));

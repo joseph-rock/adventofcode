@@ -193,7 +193,11 @@ function setQuadrant(waypoint: Waypoint, quadrant: Quadrant): Waypoint {
 }
 
 function partOne() {
-  const seedShip: Ship = { facing: Direction.E, xpos: 0, ypos: 0 };
+  const seedShip: Ship = {
+    facing: Direction.E,
+    xpos: 0,
+    ypos: 0,
+  };
   const returnShip = puzzleInput().reduce(
     (ship, inst) => executePt1(ship, inst),
     seedShip,
@@ -202,9 +206,8 @@ function partOne() {
 }
 
 function partTwo() {
-  const seedWP: Waypoint = { xpos: 10, ypos: 1 };
   const seedShip: WaypointShip = {
-    waypoint: seedWP,
+    waypoint: { xpos: 10, ypos: 1 },
     xpos: 0,
     ypos: 0,
   };

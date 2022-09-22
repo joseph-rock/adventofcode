@@ -48,11 +48,11 @@ function isDivisable(target: number, bus: Bus): boolean {
   return (target + bus.index) % bus.busID === 0;
 }
 
-function timestamp(busList: Bus[], num: number): number {
+function nextTimestamp(busList: Bus[], num: number): number {
   const increment = busList.reduce((total, bus) => total * bus.busID, 1) /
     busList[busList.length - 1].busID;
 
-  while (num < Infinity) {
+  while (num < Number.MAX_VALUE) {
     if (busList.every((bus) => isDivisable(num, bus))) {
       return num;
     }
@@ -62,13 +62,13 @@ function timestamp(busList: Bus[], num: number): number {
   return -1;
 }
 
-function earliestTimestamp(busList: Bus[]): number {
+function timestamp(busList: Bus[]): number {
   const checkList: Bus[] = [];
   let answer = busList[0].busID;
 
   for (const bus of busList) {
     checkList.push(bus);
-    answer = timestamp(checkList, answer);
+    answer = nextTimestamp(checkList, answer);
   }
 
   return answer;
@@ -79,7 +79,7 @@ function partTwo(notes: Notes): number {
     .map((bus, i) => makeBus(i, bus))
     .filter((bus) => !isNaN(bus.busID));
 
-  return earliestTimestamp(busList);
+  return timestamp(busList);
 }
 
 print(partOne(puzzleInput()), partTwo(puzzleInput()));

@@ -39,10 +39,10 @@ function boardingpassID(row: number, col: number): number {
 function pt1(input: string[][]) {
   let highest = 0;
 
-  for (const i of input) {
-    const row = calcRow(i.slice(0, 7));
-    const col = calcCol(i.slice(7));
-    const bpid = boardingpassID(row, col);
+  for (const line of input) {
+    const rowInst = line.slice(0, 7);
+    const colInst = line.slice(7);
+    const bpid = boardingpassID(calcRow(rowInst), calcCol(colInst));
     if (bpid > highest) {
       highest = bpid;
     }
@@ -54,10 +54,10 @@ function pt1(input: string[][]) {
 function pt2(input: string[][]) {
   const bp: number[] = [];
 
-  for (const i of input) {
-    const row = calcRow(i.slice(0, 7));
-    const col = calcCol(i.slice(7));
-    const bpid = boardingpassID(row, col);
+  for (const line of input) {
+    const rowInst = line.slice(0, 7);
+    const colInst = line.slice(7);
+    const bpid = boardingpassID(calcRow(rowInst), calcCol(colInst));
     bp.push(bpid);
   }
 

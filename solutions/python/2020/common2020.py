@@ -1,6 +1,6 @@
 
 def str_list(day_num: int) -> "list[str]":
-    path = f"../../input/2021/day{str(day_num)}.txt"
+    path = f"../../../input/2020/day{str(day_num)}.txt"
     with open(path) as f:
         str_list = f.read().splitlines()
 
@@ -8,7 +8,7 @@ def str_list(day_num: int) -> "list[str]":
 
 
 def int_list(day_num: int) -> "list[int]":
-    path = f"../../input/2021/day{str(day_num)}.txt"
+    path = f"../../../input/2020/day{str(day_num)}.txt"
     with open(path) as f:
         int_list = list(map(int, f.readlines()))
 
@@ -16,7 +16,7 @@ def int_list(day_num: int) -> "list[int]":
 
 
 def str_block(day_num: int) -> str:
-    path = f"../../input/2021/day{str(day_num)}.txt"
+    path = f"../../../input/2020/day{str(day_num)}.txt"
     with open(path) as f:
         file = f.read()
 

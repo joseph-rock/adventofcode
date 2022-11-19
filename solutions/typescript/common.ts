@@ -1,5 +1,5 @@
 export function input(year: number, day: number): string {
-  return Deno.readTextFileSync(`../../input/${year}/day${day}.txt`);
+  return Deno.readTextFileSync(`../../../input/${year}/day${day}.txt`);
 }
 
 export function print(pt1: string | number, pt2?: string | number): void {

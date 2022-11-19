@@ -1,5 +1,5 @@
 import { input, print } from "../common.ts";
-import { equals } from "https://deno.land/x/ramda@v0.27.2/mod.ts";
+import { equals } from "../deps.ts";
 
 interface coord {
   x: number;

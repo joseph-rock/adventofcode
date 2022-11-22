@@ -8,7 +8,6 @@ function puzzleInput(): string[][] {
 
 function groupConsensus(group: string[]): number {
   const ansTotals: Record<string, number> = {};
-
   group.map((ind) =>
     ind.split("")
       .map((ans: string) =>

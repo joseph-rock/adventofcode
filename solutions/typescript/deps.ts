@@ -1,5 +1,6 @@
 export {
   any,
+  clone,
   equals,
   last,
   max,

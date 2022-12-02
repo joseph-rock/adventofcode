@@ -1,5 +1,4 @@
 import { input, print } from "../common.ts";
-import { clone } from "../deps.ts";
 
 type coords = Record<string, Coordinate>;
 
@@ -95,30 +94,28 @@ function inactiveNeighbors(active: coords): coords {
 }
 
 function cycle(seed: coords): coords {
-  const active: coords = clone(seed);
-  const neighbors: coords = inactiveNeighbors(active);
+  const neighbors: coords = inactiveNeighbors(seed);
+  const next: coords = {};
 
-  const after: coords = {};
-  for (const c of Object.values(active)) {
-    const aCount = activeNeighborCount(c, active);
+  for (const c of Object.values(seed)) {
+    const aCount = activeNeighborCount(c, seed);
     if (aCount === 2 || aCount === 3) {
-      after[c.index()] = c;
+      next[c.index()] = c;
     }
   }
 
   for (const c of Object.values(neighbors)) {
-    const aCount = activeNeighborCount(c, active);
+    const aCount = activeNeighborCount(c, seed);
     if (aCount === 3) {
-      after[c.index()] = c;
+      next[c.index()] = c;
     }
   }
 
-  return after;
+  return next;
 }
 
 function pt1(raw: string): number {
   let ans = seed3D(raw);
-
   for (let i = 0; i < 6; i++) {
     ans = cycle(ans);
   }
@@ -128,7 +125,6 @@ function pt1(raw: string): number {
 
 function pt2(raw: string): number {
   let ans = seed4D(raw);
-
   for (let i = 0; i < 6; i++) {
     ans = cycle(ans);
   }

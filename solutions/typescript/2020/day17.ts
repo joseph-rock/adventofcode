@@ -20,27 +20,13 @@ class Coordinate {
   }
 }
 
-function seed3D(raw: string, w ?: number): coords {
+function seed(raw: string, w?: number): coords {
   const list = raw.split("\n").map((line) => line.split(""));
   const seed: coords = {};
   for (let row = 0; row < list.length; row++) {
     for (let col = 0; col < list[row].length; col++) {
       if (list[row][col] === "#") {
         const active = new Coordinate(col, row, 0, w);
-        seed[active.index()] = active;
-      }
-    }
-  }
-  return seed;
-}
-
-function seed4D(raw: string): coords {
-  const list = raw.split("\n").map((line) => line.split(""));
-  const seed: coords = {};
-  for (let row = 0; row < list.length; row++) {
-    for (let col = 0; col < list[row].length; col++) {
-      if (list[row][col] === "#") {
-        const active = new Coordinate(col, row, 0, 0);
         seed[active.index()] = active;
       }
     }
@@ -87,9 +73,9 @@ function inactiveNeighbors(active: coords): coords {
 }
 
 function cycle(active: coords): coords {
-  const neighbors: coords = inactiveNeighbors(active);
   const next: coords = {};
 
+  // Check if active cubes should flip
   for (const c of Object.values(active)) {
     const aCount = activeNeighborCount(c, active);
     if (aCount === 2 || aCount === 3) {
@@ -97,6 +83,8 @@ function cycle(active: coords): coords {
     }
   }
 
+  // Check if inactive cubes should flip
+  const neighbors: coords = inactiveNeighbors(active);
   for (const c of Object.values(neighbors)) {
     const aCount = activeNeighborCount(c, active);
     if (aCount === 3) {
@@ -108,7 +96,7 @@ function cycle(active: coords): coords {
 }
 
 function pt1(raw: string): number {
-  let ans = seed3D(raw);
+  let ans = seed(raw);
   for (let i = 0; i < 6; i++) {
     ans = cycle(ans);
   }
@@ -117,7 +105,7 @@ function pt1(raw: string): number {
 }
 
 function pt2(raw: string): number {
-  let ans = seed3D(raw, 0);
+  let ans = seed(raw, 0);
   for (let i = 0; i < 6; i++) {
     ans = cycle(ans);
   }

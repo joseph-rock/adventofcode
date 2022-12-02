@@ -56,15 +56,15 @@ function neighbors(c: Coordinate): coords {
 }
 
 function activeNeighborCount(c: Coordinate, active: coords): number {
-  return Object.keys(neighbors(c)).filter(key => active[key]).length;
+  return Object.keys(neighbors(c)).filter((key) => active[key]).length;
 }
 
 function inactiveNeighbors(active: coords): coords {
   const inactive: coords = {};
   for (const c of Object.values(active)) {
-    const n = neighbors(c)
-    for(const neighbor of Object.keys(n)) {
-      if(!active[neighbor]) {
+    const n = neighbors(c);
+    for (const neighbor of Object.keys(n)) {
+      if (!active[neighbor]) {
         inactive[neighbor] = n[neighbor];
       }
     }
@@ -77,15 +77,15 @@ function cycle(active: coords): coords {
 
   const queue: coords = {
     ...active,
-    ...inactiveNeighbors(active)
-  }
+    ...inactiveNeighbors(active),
+  };
 
-  for(const idx of Object.keys(queue)) {
+  for (const idx of Object.keys(queue)) {
     const count = activeNeighborCount(queue[idx], active);
     if (active[idx] && (count === 2 || count === 3)) {
       next[idx] = queue[idx];
     }
-    if(!active[idx] && count === 3) {
+    if (!active[idx] && count === 3) {
       next[idx] = queue[idx];
     }
   }

@@ -15,7 +15,8 @@ class Coordinate {
   }
 
   static toIndex(x: number, y: number, z: number, w?: number): string {
-    return x.toString() + y.toString() + z.toString() + (w ? w.toString() : 0);
+    return x.toString() + y.toString() + z.toString() +
+      (w !== undefined ? w.toString() : "");
   }
 }
 

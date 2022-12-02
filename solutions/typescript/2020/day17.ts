@@ -75,20 +75,18 @@ function inactiveNeighbors(active: coords): coords {
 function cycle(active: coords): coords {
   const next: coords = {};
 
-  // Check if active cubes should flip
-  for (const c of Object.values(active)) {
-    const aCount = activeNeighborCount(c, active);
-    if (aCount === 2 || aCount === 3) {
-      next[c.index()] = c;
-    }
+  const queue: coords = {
+    ...active,
+    ...inactiveNeighbors(active)
   }
 
-  // Check if inactive cubes should flip
-  const neighbors: coords = inactiveNeighbors(active);
-  for (const c of Object.values(neighbors)) {
-    const aCount = activeNeighborCount(c, active);
-    if (aCount === 3) {
-      next[c.index()] = c;
+  for(const idx of Object.keys(queue)) {
+    const count = activeNeighborCount(queue[idx], active);
+    if (active[idx] && (count === 2 || count === 3)) {
+      next[idx] = queue[idx];
+    }
+    if(!active[idx] && count === 3) {
+      next[idx] = queue[idx];
     }
   }
 

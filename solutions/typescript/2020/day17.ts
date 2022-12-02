@@ -20,13 +20,13 @@ class Coordinate {
   }
 }
 
-function seed3D(raw: string): coords {
+function seed3D(raw: string, w ?: number): coords {
   const list = raw.split("\n").map((line) => line.split(""));
   const seed: coords = {};
   for (let row = 0; row < list.length; row++) {
     for (let col = 0; col < list[row].length; col++) {
       if (list[row][col] === "#") {
-        const active = new Coordinate(col, row, 0);
+        const active = new Coordinate(col, row, 0, w);
         seed[active.index()] = active;
       }
     }
@@ -48,45 +48,20 @@ function seed4D(raw: string): coords {
   return seed;
 }
 
-function activeNeighborCount(c: Coordinate, active: coords): number {
+function neighbors(c: Coordinate): coords {
   const xRange = [c.x - 1, c.x, c.x + 1];
   const yRange = [c.y - 1, c.y, c.y + 1];
   const zRange = [c.z - 1, c.z, c.z + 1];
   const wRange = c.w !== undefined ? [c.w - 1, c.w, c.w + 1] : [undefined];
 
-  let count = 0;
+  const neighbors: coords = {};
   for (const x of xRange) {
     for (const y of yRange) {
       for (const z of zRange) {
         for (const w of wRange) {
           if (x === c.x && y === c.y && z === c.z && w === c.w) continue;
-          if (active[Coordinate.toIndex(x, y, z, w)]) {
-            count += 1;
-          }
-        }
-      }
-    }
-  }
-  return count;
-}
-
-function inactiveNeighbors(active: coords): coords {
-  const neighbors: coords = {};
-  for (const c of Object.values(active)) {
-    const xRange = [c.x - 1, c.x, c.x + 1];
-    const yRange = [c.y - 1, c.y, c.y + 1];
-    const zRange = [c.z - 1, c.z, c.z + 1];
-    const wRange = c.w !== undefined ? [c.w - 1, c.w, c.w + 1] : [undefined];
-
-    for (const x of xRange) {
-      for (const y of yRange) {
-        for (const z of zRange) {
-          for (const w of wRange) {
-            if (x === c.x && y === c.y && z === c.z && w === c.w) continue;
-            if (active[Coordinate.toIndex(x, y, z, w)]) continue;
-            const neighbor = new Coordinate(x, y, z, w);
-            neighbors[neighbor.index()] = neighbor;
-          }
+          const neighbor = new Coordinate(x, y, z, w);
+          neighbors[neighbor.index()] = neighbor;
         }
       }
     }
@@ -94,19 +69,36 @@ function inactiveNeighbors(active: coords): coords {
   return neighbors;
 }
 
-function cycle(seed: coords): coords {
-  const neighbors: coords = inactiveNeighbors(seed);
+function activeNeighborCount(c: Coordinate, active: coords): number {
+  return Object.keys(neighbors(c)).filter(key => active[key]).length;
+}
+
+function inactiveNeighbors(active: coords): coords {
+  const inactive: coords = {};
+  for (const c of Object.values(active)) {
+    const n = neighbors(c)
+    for(const neighbor of Object.keys(n)) {
+      if(!active[neighbor]) {
+        inactive[neighbor] = n[neighbor];
+      }
+    }
+  }
+  return inactive;
+}
+
+function cycle(active: coords): coords {
+  const neighbors: coords = inactiveNeighbors(active);
   const next: coords = {};
 
-  for (const c of Object.values(seed)) {
-    const aCount = activeNeighborCount(c, seed);
+  for (const c of Object.values(active)) {
+    const aCount = activeNeighborCount(c, active);
     if (aCount === 2 || aCount === 3) {
       next[c.index()] = c;
     }
   }
 
   for (const c of Object.values(neighbors)) {
-    const aCount = activeNeighborCount(c, seed);
+    const aCount = activeNeighborCount(c, active);
     if (aCount === 3) {
       next[c.index()] = c;
     }
@@ -125,7 +117,7 @@ function pt1(raw: string): number {
 }
 
 function pt2(raw: string): number {
-  let ans = seed4D(raw);
+  let ans = seed3D(raw, 0);
   for (let i = 0; i < 6; i++) {
     ans = cycle(ans);
   }

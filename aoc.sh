@@ -19,15 +19,16 @@ else
 fi
 
 echo $language $year - day $day
+target=./solutions/$language/$year/day$day
 
 if [[ $language == "typescript" ]]
 then
-    target=./solutions/$language/$year/day$day.ts
+    target=$target'.ts'
     deno run --allow-read $target
 fi
 
 if [[ $language == "python" ]]
 then
-    target=./solutions/$language/$year/day$day.py
+    target=$target'.py'
     python3 $target
 fi

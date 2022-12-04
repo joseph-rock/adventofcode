@@ -10,16 +10,15 @@ done
 
 year=$2
 len=`echo $3 | wc -c`
-
 if [ $len == 2 ]
 then
     day='0'$3
 else
     day=$3
 fi
+target=./solutions/$language/$year/day$day
 
 echo $language $year - day $day
-target=./solutions/$language/$year/day$day
 
 if [[ $language == "typescript" ]]
 then

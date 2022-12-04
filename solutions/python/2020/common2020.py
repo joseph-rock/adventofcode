@@ -1,23 +1,23 @@
 
+def path(day_num: int) -> str:
+    return f"./input/2020/day{str(day_num)}.txt"
+
 def str_list(day_num: int) -> "list[str]":
-    path = f"../../../input/2020/day{str(day_num)}.txt"
-    with open(path) as f:
+    with open(path(day_num)) as f:
         str_list = f.read().splitlines()
 
     return str_list
 
 
 def int_list(day_num: int) -> "list[int]":
-    path = f"../../../input/2020/day{str(day_num)}.txt"
-    with open(path) as f:
+    with open(path(day_num)) as f:
         int_list = list(map(int, f.readlines()))
 
     return int_list
 
 
 def str_block(day_num: int) -> str:
-    path = f"../../../input/2020/day{str(day_num)}.txt"
-    with open(path) as f:
+    with open(path(day_num)) as f:
         file = f.read()
 
     return file

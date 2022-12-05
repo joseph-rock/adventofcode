@@ -11,14 +11,14 @@ function commonThree(a: string, b: string, c: string): string {
 }
 
 function pt1(raw: string): number {
-  const supplies = raw.split("\n");
+  const rucksacks = raw.split("\n");
   const commonList: string[] = [];
 
-  for (const bag of supplies) {
-    const mid = bag.length / 2;
-    const compA = bag.slice(0, mid);
-    const compB = bag.slice(mid);
-    commonList.push(...intersection(compA, compB));
+  for (const rucksack of rucksacks) {
+    const mid = rucksack.length / 2;
+    const compartmentA = rucksack.slice(0, mid);
+    const compartmentB = rucksack.slice(mid);
+    commonList.push(...intersection(compartmentA, compartmentB));
   }
 
   return commonList.reduce((total, char) => total += priority(char), 0);

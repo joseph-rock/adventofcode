@@ -1,8 +1,8 @@
 import { input, print } from "../common.ts";
 
 function priority(char: string): number {
-  const all = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return all.indexOf(char) + 1;
+  const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return alphabet.indexOf(char) + 1;
 }
 
 function intersect(a: string, b: string): string[] {

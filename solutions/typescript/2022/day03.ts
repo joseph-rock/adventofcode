@@ -1,12 +1,7 @@
 import { input, print } from "../common.ts";
-import { range } from "../deps.ts";
 
 function priority(char: string): number {
-  const upper: string[] = range(65, 91)
-    .map((x: number) => String.fromCharCode(x));
-  const lower: string[] = range(97, 123)
-    .map((x: number) => String.fromCharCode(x));
-  const all = lower.concat(upper);
+  const all = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   return all.indexOf(char) + 1;
 }
 

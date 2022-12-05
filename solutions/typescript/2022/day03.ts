@@ -25,11 +25,11 @@ function pt1(raw: string): number {
 }
 
 function pt2(raw: string): number {
-  const supplies = raw.split("\n");
+  const rucksacks = raw.split("\n");
   const badgeList: string[] = [];
   let group: string[] = [];
 
-  for (const bag of supplies) {
+  for (const bag of rucksacks) {
     if (group.length === 3) {
       badgeList.push(commonThree(group[0], group[1], group[2]));
       group = [];

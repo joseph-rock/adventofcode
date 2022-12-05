@@ -1,18 +1,13 @@
 import { input, print } from "../common.ts";
+import { intersection } from "../deps.ts";
 
 function priority(char: string): number {
   const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   return alphabet.indexOf(char) + 1;
 }
 
-function intersect(a: string, b: string): string[] {
-  return [...a]
-    .filter((value) => [...b].includes(value))
-    .filter((curr, idx, list) => list.indexOf(curr) === idx);
-}
-
 function commonThree(a: string, b: string, c: string): string {
-  return intersect(intersect(a, b).join(""), c).toString();
+  return intersection(intersection(a, b).join(""), c).toString();
 }
 
 function pt1(raw: string): number {
@@ -23,7 +18,7 @@ function pt1(raw: string): number {
     const mid = bag.length / 2;
     const compA = bag.slice(0, mid);
     const compB = bag.slice(mid);
-    commonList.push(...intersect(compA, compB));
+    commonList.push(...intersection(compA, compB));
   }
 
   return commonList.reduce((total, char) => total += priority(char), 0);

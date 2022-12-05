@@ -5,20 +5,14 @@ function priority(char: string): number {
   return all.indexOf(char) + 1;
 }
 
-function common(a: string, b: string): string[] {
-  const c = new Set<string>();
-  const compare = [...b];
-
-  for (const char of [...a]) {
-    if (compare.includes(char)) {
-      c.add(char);
-    }
-  }
-  return Array.from(c);
+function intersect(a: string, b: string): string[] {
+  return [...a]
+    .filter((value) => [...b].includes(value))
+    .filter((curr, idx, list) => list.indexOf(curr) === idx);
 }
 
 function commonThree(a: string, b: string, c: string): string {
-  return common(common(a, b).join(""), c).toString();
+  return intersect(intersect(a, b).join(""), c).toString();
 }
 
 function pt1(raw: string): number {
@@ -29,7 +23,7 @@ function pt1(raw: string): number {
     const mid = bag.length / 2;
     const compA = bag.slice(0, mid);
     const compB = bag.slice(mid);
-    commonList.push(...common(compA, compB));
+    commonList.push(...intersect(compA, compB));
   }
 
   return commonList.reduce((total, char) => total += priority(char), 0);

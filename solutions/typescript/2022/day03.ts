@@ -5,7 +5,7 @@ function priority(char: string): number {
   return all.indexOf(char) + 1;
 }
 
-function common(a: string, b: string) {
+function common(a: string, b: string): string[] {
   const c = new Set<string>();
   const compare = [...b];
 
@@ -21,7 +21,7 @@ function commonThree(a: string, b: string, c: string): string {
   return common(common(a, b).join(""), c).toString();
 }
 
-function pt1(raw: string) {
+function pt1(raw: string): number {
   const supplies = raw.split("\n");
   const commonList: string[] = [];
 
@@ -35,7 +35,7 @@ function pt1(raw: string) {
   return commonList.reduce((total, char) => total += priority(char), 0);
 }
 
-function pt2(raw: string) {
+function pt2(raw: string): number {
   const supplies = raw.split("\n");
   const badgeList: string[] = [];
   let group: string[] = [];

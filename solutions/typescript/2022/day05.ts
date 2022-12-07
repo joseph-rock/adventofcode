@@ -7,20 +7,30 @@ interface Instruction {
   to: number;
 }
 
-function instruction(list: string[]): Instruction {
-  const a = parseInt(list[0]);
-  const f = parseInt(list[1]);
-  const t = parseInt(list[2]);
-  return { amt: a, from: f - 1, to: t - 1 };
+function instruction(line: string[]): Instruction {
+  const amt = parseInt(line[0]);
+  const from = parseInt(line[1]) - 1;
+  const to = parseInt(line[2]) - 1;
+  return { amt: amt, from: from, to: to };
 }
 
-function seed(raw: string): string[][] {
+function instList(raw: string) {
+  const sections = raw.split("\n\n");
+  const lines = sections[1].split("\n");
+  const instructionList = lines
+    .map((line) => line.split(" ").filter((char) => parseInt(char)))
+    .map((line) => instruction(line));
+  return instructionList;
+}
+
+function chartSeed(raw: string): string[][] {
   const sections = raw.split("\n\n");
 
   const re = /[\[|\]]/g;
   const arr = sections[0]
     .replaceAll(re, " ")
-    .split("\n").map((line) => line.split(""));
+    .split("\n")
+    .map((line) => line.split(""));
   arr.pop();
 
   const rotatedArr = transpose(arr);
@@ -36,19 +46,7 @@ function seed(raw: string): string[][] {
   return reversed;
 }
 
-function instList(raw: string) {
-  const sections = raw.split("\n\n");
-  const rawInst = sections[1].split("\n");
-  const nums = rawInst.map((line) =>
-    line.split(" ").filter((sects) => parseInt(sects))
-  );
-
-  const instructionList = nums.map((a) => instruction(a));
-
-  return instructionList;
-}
-
-function executePt1(inst: Instruction, chart: string[][]): string[][] {
+function moveSingles(inst: Instruction, chart: string[][]): string[][] {
   const copy = clone(chart);
   for (let i = 0; i < inst.amt; i++) {
     copy[inst.to].push(copy[inst.from].pop());
@@ -56,9 +54,10 @@ function executePt1(inst: Instruction, chart: string[][]): string[][] {
   return copy;
 }
 
-function executePt2(inst: Instruction, chart: string[][]): string[][] {
+function moveChunk(inst: Instruction, chart: string[][]): string[][] {
   const copy = clone(chart);
-  copy[inst.to].push(...copy[inst.from].slice(-inst.amt));
+  const chunk = copy[inst.from].slice(-inst.amt);
+  copy[inst.to].push(...chunk);
   for (let i = 0; i < inst.amt; i++) {
     copy[inst.from].pop();
   }
@@ -66,21 +65,17 @@ function executePt2(inst: Instruction, chart: string[][]): string[][] {
 }
 
 function pt1(raw: string) {
-  let chart = seed(raw);
-  const inst = instList(raw);
-
-  inst.forEach((i) => chart = executePt1(i, chart));
-
+  let chart = chartSeed(raw);
+  const instructions = instList(raw);
+  instructions.forEach((inst) => chart = moveSingles(inst, chart));
   return chart.reduce((final: string, line) => final += line.pop(), "");
 }
 
 function pt2(raw: string) {
-  let chart = seed(raw);
+  let c = chartSeed(raw);
   const inst = instList(raw);
-
-  inst.forEach((i) => chart = executePt2(i, chart));
-
-  return chart.reduce((final: string, line) => final += line.pop(), "");
+  inst.forEach((i) => c = moveChunk(i, c));
+  return c.reduce((final: string, line) => final += line.pop(), "");
 }
 
 const raw = input(2022, 5);

@@ -1,5 +1,4 @@
 import { input, print } from "../common.ts";
-import { uniq } from "../deps.ts";
 
 function numCharsProcessed(raw: string, windowSize: number): number {
   const list = raw.split("");
@@ -7,7 +6,8 @@ function numCharsProcessed(raw: string, windowSize: number): number {
   for (let start = 0; start < list.length - windowSize; start++) {
     const end = start + windowSize;
     const window = list.slice(start, end);
-    if (uniq(window).length === windowSize) return end;
+    const uniq = new Set(window);
+    if (uniq.size === windowSize) return end;
   }
   return -1;
 }

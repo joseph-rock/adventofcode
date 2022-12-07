@@ -72,10 +72,10 @@ function pt1(raw: string) {
 }
 
 function pt2(raw: string) {
-  let c = chartSeed(raw);
-  const inst = instList(raw);
-  inst.forEach((i) => c = moveChunk(i, c));
-  return c.reduce((final: string, line) => final += line.pop(), "");
+  let chart = chartSeed(raw);
+  const instructions = instList(raw);
+  instructions.forEach((inst) => chart = moveChunk(inst, chart));
+  return chart.reduce((final: string, line) => final += line.pop(), "");
 }
 
 const raw = input(2022, 5);

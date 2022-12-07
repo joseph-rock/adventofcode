@@ -2,23 +2,23 @@ import _Set from "https://deno.land/x/ramda@v0.27.2/source/internal/_Set.js";
 import { input, print } from "../common.ts";
 import { uniq } from "../deps.ts";
 
-function uniqWindow(raw: string, size: number): number {
+function numCharsProcessed(raw: string, windowSize: number): number {
   const list = raw.split("");
 
-  for (let start = 0; start < list.length - size; start++) {
-    const end = start + size;
+  for (let start = 0; start < list.length - windowSize; start++) {
+    const end = start + windowSize;
     const window = list.slice(start, end);
-    if (uniq(window).length === size) return end;
+    if (uniq(window).length === windowSize) return end;
   }
   return -1;
 }
 
 function pt1(raw: string): number {
-  return uniqWindow(raw, 4);
+  return numCharsProcessed(raw, 4);
 }
 
 function pt2(raw: string): number {
-  return uniqWindow(raw, 14);
+  return numCharsProcessed(raw, 14);
 }
 
 const raw = input(2022, 6);

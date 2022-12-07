@@ -14,7 +14,7 @@ function instruction(line: string[]): Instruction {
   return { amt: amt, from: from, to: to };
 }
 
-function instList(raw: string) {
+function instList(raw: string): Instruction[] {
   const sections = raw.split("\n\n");
   const lines = sections[1].split("\n");
   const instructionList = lines
@@ -64,14 +64,14 @@ function moveChunk(inst: Instruction, chart: string[][]): string[][] {
   return copy;
 }
 
-function pt1(raw: string) {
+function pt1(raw: string): string {
   let chart = chartSeed(raw);
   const instructions = instList(raw);
   instructions.forEach((inst) => chart = moveSingles(inst, chart));
   return chart.reduce((final: string, line) => final += line.pop(), "");
 }
 
-function pt2(raw: string) {
+function pt2(raw: string): string {
   let chart = chartSeed(raw);
   const instructions = instList(raw);
   instructions.forEach((inst) => chart = moveChunk(inst, chart));

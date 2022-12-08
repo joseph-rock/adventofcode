@@ -79,7 +79,7 @@ function pt1(raw: string): number {
 
 function pt2(raw: string): number {
   const instructions = raw.split("\n");
-  return instructions.reduce((total, line, idx) => {
+  return instructions.reduce((total, line) => {
     const ans = line.replaceAll(" ", "").split("");
     return total += prioritizeAdd(ans);
   }, 0);

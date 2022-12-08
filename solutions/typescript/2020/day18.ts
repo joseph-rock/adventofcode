@@ -20,7 +20,7 @@ function subGroup(arr: string[]): string[] {
       return arr.slice(1, i);
     }
   }
-  return [...arr];
+  return arr;
 }
 
 function evaluate(arr: string[]): number {

@@ -23,31 +23,6 @@ function subGroup(arr: string[]): string[] {
   return arr;
 }
 
-// function evaluate(arr: string[]): number {
-//   const a = clone(arr);
-
-//   let operator: typeof add | typeof multiply = add;
-//   let total = 0;
-
-//   while (a.length > 0) {
-//     const char = a.shift();
-//     if (char === undefined) return total;
-
-//     if (char === "+" || char === "*") {
-//       operator = op(char);
-//     } else if (parseInt(char)) {
-//       total = operator(total, parseInt(char));
-//     } else if (char === "(") {
-//       a.unshift(char);
-//       const group = subGroup(a);
-//       total = operator(total, evaluate(group));
-//       a.splice(0, group.length + 2);
-//     }
-//   }
-
-//   return total;
-// }
-
 function evaluate(arr: string[]): number {
   const a = clone(arr);
 
@@ -59,8 +34,8 @@ function evaluate(arr: string[]): number {
   }
 
   while (a.length > 1) {
-    const sum = op(a[1])(parseInt(a[0]), parseInt(a[2]));
-    a.splice(0, 3, sum.toString());
+    const result = op(a[1])(parseInt(a[0]), parseInt(a[2]));
+    a.splice(0, 3, result.toString());
   }
 
   return parseInt(a);
@@ -103,7 +78,3 @@ function pt2(raw: string): number {
 
 const raw = input(2020, 18);
 print(pt1(raw), pt2(raw));
-
-// const a = "5 + (8 * 3 + 9 + 3 * 4 * 3)";
-// const ans = a.replaceAll(" ", "").split("");
-// console.log(foo(ans));

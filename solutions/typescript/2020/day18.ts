@@ -42,7 +42,7 @@ function evaluate(arr: string[]): number {
 }
 
 function prioritizeAdd(arr: string[]): number {
-  const a: string[] = clone(arr);
+  const a = clone(arr);
 
   while (a.includes("(")) {
     const idx = a.indexOf("(");

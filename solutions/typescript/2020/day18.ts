@@ -81,7 +81,6 @@ function pt2(raw: string): number {
   const instructions = raw.split("\n");
   return instructions.reduce((total, line, idx) => {
     const ans = line.replaceAll(" ", "").split("");
-    if (prioritizeAdd(ans) === 0) console.log(idx);
     return total += prioritizeAdd(ans);
   }, 0);
 }

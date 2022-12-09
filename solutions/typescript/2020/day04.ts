@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { equals } from "../deps.ts";
+import { input, print } from "common";
+import { equals } from "ramda";
 
 function createPassport(list: string[]): Record<string, string> {
   const passport: Record<string, string> = {};

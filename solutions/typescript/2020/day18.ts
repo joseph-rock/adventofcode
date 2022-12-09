@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { add, clone, multiply } from "../deps.ts";
+import { input, print } from "common";
+import { add, clone, multiply } from "ramda";
 
 function op(char: string): typeof add | typeof multiply {
   if (char === "+") {

@@ -1,4 +1,4 @@
-import { input, print } from "../common.ts";
+import { input, print } from "common";
 
 function startingNumbers(): string[][] {
   return input(2020, 5).split("\n").map((line) => line.split(""));

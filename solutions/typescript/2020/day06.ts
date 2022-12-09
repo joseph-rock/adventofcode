@@ -1,4 +1,4 @@
-import { input, print } from "../common.ts";
+import { input, print } from "common";
 
 function puzzleInput(): string[][] {
   return input(2020, 6)

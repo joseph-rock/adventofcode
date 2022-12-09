@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { intersection } from "../deps.ts";
+import { input, print } from "common";
+import { intersection } from "ramda";
 
 function priority(char: string): number {
   const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -16,9 +16,9 @@ function pt1(raw: string): number {
 
   for (const rucksack of rucksacks) {
     const mid = rucksack.length / 2;
-    const compartmentA = rucksack.slice(0, mid);
-    const compartmentB = rucksack.slice(mid);
-    commonList.push(...intersection(compartmentA, compartmentB));
+    const compA = rucksack.slice(0, mid);
+    const compB = rucksack.slice(mid);
+    commonList.push(...intersection(compA, compB));
   }
 
   return commonList.reduce((total, char) => total += priority(char), 0);

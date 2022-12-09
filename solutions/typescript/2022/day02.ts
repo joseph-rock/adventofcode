@@ -1,4 +1,4 @@
-import { input, print } from "../common.ts";
+import { input, print } from "common";
 
 enum RPS {
   ROCK = 1,

@@ -1,4 +1,4 @@
-import { input, print } from "../common.ts";
+import { input, print } from "common";
 
 function numCharsProcessed(raw: string, windowSize: number): number {
   const list = raw.split("");

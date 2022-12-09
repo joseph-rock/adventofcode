@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { clone, transpose } from "../deps.ts";
+import { input, print } from "common";
+import { clone, transpose } from "ramda";
 
 interface Instruction {
   amt: number;

@@ -1,4 +1,4 @@
-import { input, print } from "../common.ts";
+import { input, print } from "common";
 
 function calorieCounts(raw: string): number[] {
   return raw.split("\n\n")

@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { last } from "../deps.ts";
+import { input, print } from "common";
+import { last } from "ramda";
 
 type Notes = {
   timestamp: number;

@@ -1,5 +1,5 @@
-import { uniq } from "../deps.ts";
-import { input, print } from "../common.ts";
+import { input, print } from "common";
+import { uniq } from "ramda";
 
 function puzzleInput(): number[] {
   return input(2020, 1)

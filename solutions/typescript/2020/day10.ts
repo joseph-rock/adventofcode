@@ -1,5 +1,5 @@
-import { input, print } from "../common.ts";
-import { last } from "../deps.ts";
+import { input, print } from "common";
+import { last } from "ramda";
 
 function joltageList(): number[] {
   return input(2020, 10)

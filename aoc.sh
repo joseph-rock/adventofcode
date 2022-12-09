@@ -23,7 +23,7 @@ echo $language $year - day $day
 if [[ $language == "typescript" ]]
 then
     target=$target'.ts'
-    deno run --allow-read $target
+    deno run --allow-read --import-map import_map.json $target
 fi
 
 if [[ $language == "python" ]]

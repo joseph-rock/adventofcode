@@ -84,12 +84,12 @@ function sumDirOfMaxSize(node: Node, max: number): number {
   return sum;
 }
 
-function fileToDelete(node: Node, min: number, best: number): number {
+function fileToDeleteSize(node: Node, min: number, best: number): number {
   if (node.type === FileType.DIR && node.size >= min && node.size < best) {
     best = node.size;
   }
   for (const child of Object.keys(node.children)) {
-    const test = fileToDelete(node.children[child], min, best);
+    const test = fileToDeleteSize(node.children[child], min, best);
     test >= min && test < best ? best = test : best;
   }
   return best;
@@ -110,7 +110,7 @@ function pt2(raw: string): number {
   const totalSpace = 70000000;
   const reqSpace = 30000000;
   const minSpaceToFree = reqSpace - (totalSpace - rootDir.size);
-  return fileToDelete(rootDir, minSpaceToFree, totalSpace);
+  return fileToDeleteSize(rootDir, minSpaceToFree, totalSpace);
 }
 
 const raw = input(2022, 7);

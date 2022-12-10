@@ -17,7 +17,7 @@ function isVisible(pos: POS, grid: number[][]): boolean {
 
   return pos.x === 0 ||
     pos.y === 0 ||
-    pos.x === grid[0].length - 1 ||
+    pos.x === grid[pos.y].length - 1 ||
     pos.y === grid.length - 1 ||
     !left.some((tree) => tree >= height) ||
     !right.some((tree) => tree >= height) ||

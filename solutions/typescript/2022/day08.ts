@@ -53,9 +53,8 @@ function viewDistance(height: number, arr: number[]): number {
 }
 
 function pt1(raw: string): number {
-  const grid = raw.split("\n").map((line) =>
-    line.split("").map((num) => parseInt(num))
-  );
+  const grid = raw.split("\n")
+    .map((line) => line.split("").map((num) => parseInt(num)));
 
   return grid.map((_, y) => _.map((_, x) => isVisible({ x: x, y: y }, grid)))
     .flat()
@@ -64,9 +63,8 @@ function pt1(raw: string): number {
 }
 
 function pt2(raw: string): number {
-  const grid = raw.split("\n").map((line) =>
-    line.split("").map((num) => parseInt(num))
-  );
+  const grid = raw.split("\n")
+    .map((line) => line.split("").map((num) => parseInt(num)));
 
   const heights = grid
     .map((_, y) => _.map((_, x) => totalVisScore({ x: x, y: y }, grid)))

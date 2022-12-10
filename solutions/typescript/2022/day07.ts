@@ -13,7 +13,7 @@ enum FileType {
   DIR,
 }
 
-function tree(terminal: string[]): Node {
+function getRootDir(output: string[]): Node {
   const home: Node = {
     name: "/",
     type: FileType.DIR,
@@ -24,7 +24,7 @@ function tree(terminal: string[]): Node {
   const root = home;
   let dir = home;
 
-  for (const line of terminal) {
+  for (const line of output) {
     if (line.includes("$ ls")) continue;
 
     // cd command
@@ -84,7 +84,7 @@ function sumDirOfMaxSize(node: Node, max: number): number {
   return sum;
 }
 
-function fileToDelete(node: Node, min: number, best = 70000000): number {
+function fileToDelete(node: Node, min: number, best: number): number {
   if (node.type === FileType.DIR && node.size >= min && node.size < best) {
     best = node.size;
   }
@@ -96,17 +96,21 @@ function fileToDelete(node: Node, min: number, best = 70000000): number {
 }
 
 function pt1(raw: string): number {
-  const terminal = raw.split("\n");
-  const directory = tree(terminal);
-  return sumDirOfMaxSize(directory, 100000);
+  const output = raw.split("\n");
+  const rootDir = getRootDir(output);
+
+  const maxSize = 100000;
+  return sumDirOfMaxSize(rootDir, maxSize);
 }
 
 function pt2(raw: string): number {
-  const terminal = raw.split("\n");
-  const directory = tree(terminal);
+  const output = raw.split("\n");
+  const rootDir = getRootDir(output);
 
-  const minAmountToDelete = 30000000 - (70000000 - directory.size);
-  return fileToDelete(directory, minAmountToDelete);
+  const totalSpace = 70000000;
+  const reqSpace = 30000000;
+  const minSpaceToFree = reqSpace - (totalSpace - rootDir.size);
+  return fileToDelete(rootDir, minSpaceToFree, totalSpace);
 }
 
 const raw = input(2022, 7);

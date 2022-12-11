@@ -10,3 +10,4 @@ I come back to these problems when I have free time. This is very much a work in
 
 ## [Typescript](/solutions/typescript/)
 [![Custom badge](https://img.shields.io/endpoint?logo=Typescript&style=plastic&url=https%3A%2F%2Fraw.githubusercontent.com%2Fjoseph-rock%2Fadventofcode%2Fmaster%2F.github%2Fbadges%2Ftypescript%2F2020.json)](/solutions/typescript/2020/)  
+[![Custom badge](https://img.shields.io/endpoint?logo=Typescript&style=plastic&url=https%3A%2F%2Fraw.githubusercontent.com%2Fjoseph-rock%2Fadventofcode%2Fmaster%2F.github%2Fbadges%2Ftypescript%2F2022.json)](/solutions/typescript/2022/)  

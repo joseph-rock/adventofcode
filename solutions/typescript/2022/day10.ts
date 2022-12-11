@@ -1,10 +1,5 @@
 import { input, print } from "common";
 
-function drawPixel(pixels: string, cursor: number): string {
-  const window = [cursor - 1, cursor, cursor + 1];
-  return window.includes(pixels.length) ? pixels + "#" : pixels + ".";
-}
-
 function pt1(raw: string) {
   const instructions = raw.split("\n");
   const checkIdx = [20, 60, 100, 140, 180, 220];
@@ -26,11 +21,16 @@ function pt1(raw: string) {
   return result.reduce((total, value) => total += value);
 }
 
+function drawPixel(pixels: string, cursor: number): string {
+  const window = [cursor - 1, cursor, cursor + 1];
+  return window.includes(pixels.length) ? pixels + "#" : pixels + ".";
+}
+
 function pt2(raw: string) {
   const instructions = raw.split("\n");
   const result: string[] = [];
-  let line = "";
 
+  let line = "";
   let cycle = 0;
   let spritePos = 1;
 

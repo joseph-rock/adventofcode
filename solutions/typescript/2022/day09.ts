@@ -27,7 +27,6 @@ function idx(pos: POS): string {
 function inRange(head: POS, tail: POS): boolean {
   const row = [head.x - 1, head.x, head.x + 1];
   const col = [head.y - 1, head.y, head.y + 1];
-
   return row.includes(tail.x) && col.includes(tail.y);
 }
 

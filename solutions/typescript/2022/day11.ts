@@ -69,7 +69,6 @@ function cycle(monkeys: Record<string, Monkey>) {
 
   for (const monkey of Object.keys(next)) {
     while (next[monkey].items.length > 0) {
-      next[monkey].itemsInspected += 1;
       const item = next[monkey].items.shift();
       const testNum = next[monkey].test.divby;
       const trueTarget = next[monkey].test.trueTarget;
@@ -83,6 +82,7 @@ function cycle(monkeys: Record<string, Monkey>) {
       worry % testNum === 0
         ? next[trueTarget].items.push(worry)
         : next[falseTarget].items.push(worry);
+      next[monkey].itemsInspected += 1;
     }
   }
   return next;

@@ -4,7 +4,6 @@ interface Node {
   name: string;
   type: FileType;
   size: number;
-  parent?: Node;
   children: Record<string, Node>;
 }
 
@@ -13,22 +12,20 @@ enum FileType {
   DIR,
 }
 
-function mkdir(name: string, parent: Node): Node {
+function mkdir(name: string): Node {
   return {
     name: name,
     type: FileType.DIR,
     size: 0,
-    parent: parent,
     children: {},
   };
 }
 
-function mkfile(name: string, size: number, parent: Node): Node {
+function mkfile(name: string, size: number): Node {
   return {
     name: name,
     type: FileType.FILE,
     size: size,
-    parent: parent,
     children: {},
   };
 }
@@ -41,7 +38,7 @@ function root(output: string[]): Node {
     children: {},
   };
 
-  const root = home;
+  const stack: Node[] = [];
   let dir = home;
 
   for (const line of output) {
@@ -49,10 +46,11 @@ function root(output: string[]): Node {
 
     if (line.includes("$ cd")) {
       if (line.includes("cd /")) {
-        dir = root;
+        while (stack.length > 0) dir = stack.pop() || dir;
       } else if (line.includes("cd ..")) {
-        dir = dir.parent || dir;
+        dir = stack.pop() || dir;
       } else {
+        stack.push(dir);
         const subDir = line.replace("$ cd ", "");
         dir = dir.children[subDir] || dir;
       }
@@ -62,17 +60,17 @@ function root(output: string[]): Node {
     const ls = line.split(" ");
     if (ls[0] === "dir") {
       const name = ls[1];
-      const subDir = mkdir(name, dir);
+      const subDir = mkdir(name);
       dir.children[subDir.name] = subDir;
     } else {
       const name = ls[1];
       const size = parseInt(ls[0]);
-      const subDir = mkfile(name, size, dir);
+      const subDir = mkfile(name, size);
       dir.children[subDir.name] = subDir;
     }
   }
-  calcSize(root);
-  return root;
+  calcSize(stack[0]);
+  return stack[0];
 }
 
 function calcSize(node: Node): number {

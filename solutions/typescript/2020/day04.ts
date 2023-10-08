@@ -1,9 +1,9 @@
 import { input, print } from "common";
 import { equals } from "ramda";
 
-function createPassport(list: string[]): Record<string, string> {
+function createPassport(passportFields: string[]): Record<string, string> {
   const passport: Record<string, string> = {};
-  for (const field of list) {
+  for (const field of passportFields) {
     const fieldElem = field.split(":");
     passport[fieldElem[0]] = fieldElem[1];
   }
@@ -19,7 +19,7 @@ function passportList(): Record<string, string>[] {
 
 function validPassport(
   passport: Record<string, string>,
-  requiredFields: string[],
+  requiredFields: string[]
 ): boolean {
   const keys = Object.keys(passport);
   keys.includes("cid") ? keys : keys.push("cid");
@@ -113,8 +113,8 @@ function partOne(passports: Record<string, string>[]): number {
 
   return passports.reduce(
     (total, passport) =>
-      validPassport(passport, requiredFields) ? total += 1 : total,
-    0,
+      validPassport(passport, requiredFields) ? (total += 1) : total,
+    0
   );
 }
 
@@ -133,13 +133,14 @@ function partTwo(passports: Record<string, string>[]): number {
   return passports.reduce(
     (total, passport) =>
       validPassport(passport, requiredFields) &&
-        !Object.keys(passport)
-          .map((key: string) => validField(key, passport[key]))
-          .includes(false)
-        ? total += 1
+      !Object.keys(passport)
+        .map((key: string) => validField(key, passport[key]))
+        .includes(false)
+        ? (total += 1)
         : total,
-    0,
+    0
   );
 }
 
-print(partOne(passportList()), partTwo(passportList()));
+const passports = passportList();
+print(partOne(passports), partTwo(passports));

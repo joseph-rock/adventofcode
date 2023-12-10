@@ -36,19 +36,23 @@ function convertWordsToNums(line: string): string {
 
 function pt1(raw: string): number {
   const lines = raw.split("\n");
-  const digits = lines
-    .map((line) => digitList(line))
-    .map((nums) => nums[0] * 10 + nums[nums.length - 1]);
-  return digits.reduce((total, num) => total + num);
+  const calibrationValues = lines
+    .map((line) => {
+      const digits = digitList(line);
+      return digits[0] * 10 + digits[digits.length - 1];
+    });
+  return calibrationValues.reduce((total, num) => total + num, 0);
 }
 
 function pt2(raw: string): number {
   const lines = raw.split("\n");
-  const digits = lines
-    .map((line) => convertWordsToNums(line))
-    .map((line) => digitList(line))
-    .map((nums) => nums[0] * 10 + nums[nums.length - 1]);
-  return digits.reduce((total, num) => total + num);
+  const calibrationValues = lines
+    .map((line) => {
+      const extractNumbers = convertWordsToNums(line);
+      const digits = digitList(extractNumbers);
+      return digits[0] * 10 + digits[digits.length - 1];
+    });
+  return calibrationValues.reduce((total, num) => total + num, 0);
 }
 
 const raw = input(2023, 1);

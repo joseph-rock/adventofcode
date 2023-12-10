@@ -19,7 +19,7 @@ function digitList(line: string): number[] {
     .filter((num) => !isNaN(num));
 }
 
-function convertWordsToNum(line: string): string {
+function convertWordsToNums(line: string): string {
   const array = [...line];
   for (let left = 0; left < array.length; left++) {
     for (let right = left; right <= array.length; right++) {
@@ -45,7 +45,7 @@ function pt1(raw: string): number {
 function pt2(raw: string): number {
   const lines = raw.split("\n");
   const digits = lines
-    .map((line) => convertWordsToNum(line))
+    .map((line) => convertWordsToNums(line))
     .map((line) => digitList(line))
     .map((nums) => nums[0] * 10 + nums[nums.length - 1]);
   return digits.reduce((total, num) => total + num);

@@ -19,7 +19,6 @@ async function main() {
   await run(`deno run --allow-read ${target}`)
     .then((output) => printOutput(output, options.year, options.day))
     .catch((error) => {
-      console.log(error);
       printError(error.stderr, options.year, options.day);
     });
 }

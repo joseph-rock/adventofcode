@@ -48,7 +48,7 @@ function isImpossible(cube: Cube): boolean {
   return true;
 }
 
-function powerLevel(game: Game) {
+function powerLevel(game: Game): number {
   let red = 0;
   let green = 0;
   let blue = 0;
@@ -75,7 +75,7 @@ function pt1(raw: string): number {
       : total += game.id, 0);
 }
 
-function pt2(raw: string) {
+function pt2(raw: string): number {
   const games = parseRecords(raw);
   return games.reduce((total, game) => total += powerLevel(game), 0);
 }

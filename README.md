@@ -9,3 +9,8 @@ solutions in Python, later transitioning to TypeScript using
 
 I come back to these problems when I have free time. This is very much a work in
 progress.
+
+Run command:
+```
+deno task start --year <year> --day <day>
+```

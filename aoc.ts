@@ -18,19 +18,12 @@ async function main() {
 
   await run(`deno run --allow-read ${target}`)
     .then((output) => printOutput(output, options.year, options.day))
-    .catch((error) => {
-      printError(error.stderr, options.year, options.day);
-    });
+    .catch((error) => console.log(error.stderr));
 }
 
 function printOutput(output: string, year: string, day: string) {
   console.log(`Advent of Code ${year} - Day ${day}`);
   console.log(output);
-}
-
-function printError(stderr: string, year: string, day: string) {
-  console.log(stderr);
-  console.log(`No solution found for year ${year} day ${day}`);
 }
 
 main();

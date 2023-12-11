@@ -10,6 +10,28 @@ type Cube = {
   color: string;
 };
 
+function main() {
+  const raw = input(2023, 2);
+  print(pt1(raw), pt2(raw));
+}
+
+function pt1(raw: string): number {
+  const games = parseRecords(raw);
+  return games.reduce((total, game) =>
+    game.sets
+        .some((set) =>
+          set
+            .some((cube) => isImpossible(cube))
+        )
+      ? total
+      : total += game.id, 0);
+}
+
+function pt2(raw: string): number {
+  const games = parseRecords(raw);
+  return games.reduce((total, game) => total += powerLevel(game), 0);
+}
+
 function parseRecords(raw: string): Game[] {
   const games = raw.split("\n");
   return games.map((line) => {
@@ -63,22 +85,4 @@ function powerLevel(game: Game): number {
   return red * green * blue;
 }
 
-function pt1(raw: string): number {
-  const games = parseRecords(raw);
-  return games.reduce((total, game) =>
-    game.sets
-        .some((set) =>
-          set
-            .some((cube) => isImpossible(cube))
-        )
-      ? total
-      : total += game.id, 0);
-}
-
-function pt2(raw: string): number {
-  const games = parseRecords(raw);
-  return games.reduce((total, game) => total += powerLevel(game), 0);
-}
-
-const raw = input(2023, 2);
-print(pt1(raw), pt2(raw));
+main();

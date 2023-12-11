@@ -9,6 +9,6 @@
   },
   "tasks": {
     "dev": "deno run --watch aoc.ts",
-    "run": "deno run --allow-run aoc.ts"
+    "start": "deno run --allow-run aoc.ts"
   }
 }

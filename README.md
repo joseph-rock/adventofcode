@@ -12,5 +12,5 @@ progress.
 
 Run command:
 ```
-deno task start -y <year> -d <day>
+deno task start --year <year> --day <day>
 ```

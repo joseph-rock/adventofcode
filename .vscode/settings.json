@@ -2,7 +2,6 @@
   "deno.enable": true,
   "deno.unstable": false,
   "deno.lint": true,
-  "deno.importMap": "./import_map.json",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "editor.defaultFormatter": "denoland.vscode-deno"

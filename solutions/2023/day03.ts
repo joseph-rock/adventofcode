@@ -54,7 +54,6 @@ function hasAdjacentSymbol(
 ): boolean {
   const xLimit = schematic[0].length - 1;
   const yLimit = schematic.length - 1;
-
   for (let y = yCoord - 1; y <= yCoord + 1; y++) {
     if (y < 0 || y > yLimit) continue;
     for (let x = xCoord - 1; x <= xCoord + 1; x++) {
@@ -64,7 +63,6 @@ function hasAdjacentSymbol(
       }
     }
   }
-
   return false;
 }
 
@@ -76,7 +74,6 @@ function adjacentNumbers(
   const xLimit = schematic[0].length - 1;
   const yLimit = schematic.length - 1;
   const partNumbers = [];
-
   for (let y = yCoord - 1; y <= yCoord + 1; y++) {
     if (y < 0 || y > yLimit) continue;
     for (let x = xCoord - 1; x <= xCoord + 1; x++) {
@@ -88,7 +85,6 @@ function adjacentNumbers(
       }
     }
   }
-
   return partNumbers;
 }
 
@@ -100,12 +96,12 @@ function getPartNumber(line: string[], cursor: number): number {
 }
 
 function rightBoundary(line: string[], x: number): number {
-  if (x >= line.length || !isNum(line[x + 1])) return x;
+  if (x + 1 >= line.length || !isNum(line[x + 1])) return x;
   return rightBoundary(line, x + 1);
 }
 
 function leftBoundary(line: string[], x: number): number {
-  if (x < 0 || !isNum(line[x - 1])) return x;
+  if (x - 1 < 0 || !isNum(line[x - 1])) return x;
   return leftBoundary(line, x - 1);
 }
 

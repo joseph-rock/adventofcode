@@ -27,7 +27,7 @@ function pt2(raw: string): number {
   for (let y = 0; y < schematic.length; y++) {
     for (let x = 0; x < schematic[0].length; x++) {
       if (schematic[y][x] === "*") {
-        const partNumbers = adjacentNumbers(schematic, y, x);
+        const partNumbers = adjacentPartNumbers(schematic, y, x);
         if (partNumbers.length === 2) {
           const gearRatio = partNumbers[0] * partNumbers[1];
           gearRatios.push(gearRatio);
@@ -66,7 +66,7 @@ function hasAdjacentSymbol(
   return false;
 }
 
-function adjacentNumbers(
+function adjacentPartNumbers(
   schematic: string[][],
   yCoord: number,
   xCoord: number,

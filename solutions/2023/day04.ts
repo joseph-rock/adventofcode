@@ -48,7 +48,7 @@ function matchedNums(card: Card): number[] {
 }
 
 function score(n: number): number {
-  return Math.floor(2 ** n / 2);
+  return Math.floor(2 ** (n - 1));
 }
 
 main();

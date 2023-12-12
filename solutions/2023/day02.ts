@@ -19,11 +19,8 @@ function main() {
 function pt1(raw: string): number {
   const games = parseRecords(raw);
   return games.reduce(
-    (total, game) =>
-      game.sets
-          .some((set) => isImpossible(set))
-        ? total
-        : total += game.id,
+    (sum, game) =>
+      game.sets.some((set) => isImpossible(set)) ? sum : sum += game.id,
     0,
   );
 }

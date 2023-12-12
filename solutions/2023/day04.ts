@@ -8,14 +8,32 @@ type Card = {
 
 function main() {
   const raw = input(2023, 4);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
-function pt1(raw: string) {
+function pt1(raw: string): number {
   const cards = parseCards(raw);
-  const matchedNumbers = cards.map((card) => matchedNums(card));
-  const scores = matchedNumbers.map((matchedNums) => score(matchedNums.length));
-  return scores.reduce((total, score) => total += score);
+  return cards
+    .map((card) => matchedNums(card))
+    .map((matchedNums) => score(matchedNums.length))
+    .reduce((total, score) => total += score);
+}
+
+function pt2(raw: string): number {
+  const cards = parseCards(raw);
+  const queue: number[] = [];
+  let total = 0;
+
+  for (const card of cards) {
+    const copies = queue.shift() ?? 1;
+    total += copies;
+
+    const totalMatched = matchedNums(card).length;
+    for (let i = 0; i < totalMatched; i++) {
+      queue[i] ? queue[i] += copies : queue[i] = copies + 1;
+    }
+  }
+  return total;
 }
 
 function parseCards(raw: string): Card[] {
@@ -25,13 +43,10 @@ function parseCards(raw: string): Card[] {
 
   return cards.map((card) => {
     const match = card.match(cardRegex);
-    const id = match!.groups!.id;
-    const winningNums = toNumArray(match!.groups!.winningNums);
-    const elfNums = toNumArray(match!.groups!.elfNums);
     return {
-      id: id,
-      winningNums: winningNums,
-      elfNums: elfNums,
+      id: match!.groups!.id,
+      winningNums: toNumArray(match!.groups!.winningNums),
+      elfNums: toNumArray(match!.groups!.elfNums),
     };
   });
 }

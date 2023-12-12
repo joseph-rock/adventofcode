@@ -2,12 +2,13 @@ import { input, print } from "common";
 
 type Game = {
   id: number;
-  sets: Cube[][];
+  sets: SetCubes[];
 };
 
-type Cube = {
-  amount: number;
-  color: string;
+type SetCubes = {
+  red: number;
+  green: number;
+  blue: number;
 };
 
 function main() {
@@ -17,14 +18,14 @@ function main() {
 
 function pt1(raw: string): number {
   const games = parseRecords(raw);
-  return games.reduce((total, game) =>
-    game.sets
-        .some((set) =>
-          set
-            .some((cube) => isImpossible(cube))
-        )
-      ? total
-      : total += game.id, 0);
+  return games.reduce(
+    (total, game) =>
+      game.sets
+          .some((set) => isImpossible(set))
+        ? total
+        : total += game.id,
+    0,
+  );
 }
 
 function pt2(raw: string): number {
@@ -47,27 +48,34 @@ function parseGameID(gameID: string): number {
   return parseInt(parts[1]);
 }
 
-function parseSets(rawSets: string): Cube[][] {
+function parseSets(rawSets: string): SetCubes[] {
   const sets = rawSets.split(";");
-  return sets.map((set) => parseCubes(set));
+  return sets.map((set) => parseSet(set));
 }
 
-function parseCubes(set: string): Cube[] {
-  return set
-    .split(",")
-    .map((cube) => {
-      const traits = cube
-        .trim()
-        .split(" ");
-      return { amount: parseInt(traits[0]), color: traits[1] };
-    });
+function parseSet(set: string): SetCubes {
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+  const cubes = set.split(",");
+  for (const cube of cubes) {
+    const traits = cube.trim().split(" ");
+    if (traits[1] === "red") red += parseInt(traits[0]);
+    if (traits[1] === "green") green += parseInt(traits[0]);
+    if (traits[1] === "blue") blue += parseInt(traits[0]);
+  }
+
+  return {
+    red: red,
+    green: green,
+    blue: blue,
+  };
 }
 
-function isImpossible(cube: Cube): boolean {
-  if (cube.color === "red") return cube.amount > 12;
-  if (cube.color === "green") return cube.amount > 13;
-  if (cube.color === "blue") return cube.amount > 14;
-  return true;
+function isImpossible(cubes: SetCubes): boolean {
+  return cubes.red > 12 ||
+    cubes.green > 13 ||
+    cubes.blue > 14;
 }
 
 function powerLevel(game: Game): number {
@@ -76,11 +84,9 @@ function powerLevel(game: Game): number {
   let blue = 0;
 
   for (const set of game.sets) {
-    for (const cube of set) {
-      if (cube.color === "red" && cube.amount > red) red = cube.amount;
-      if (cube.color === "green" && cube.amount > green) green = cube.amount;
-      if (cube.color === "blue" && cube.amount > blue) blue = cube.amount;
-    }
+    if (set.red > red) red = set.red;
+    if (set.green > green) green = set.green;
+    if (set.blue > blue) blue = set.blue;
   }
   return red * green * blue;
 }

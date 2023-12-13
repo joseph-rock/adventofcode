@@ -19,15 +19,28 @@ type SeedMap = {
 
 function main() {
   const raw = input(2023, 5);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
 function pt1(raw: string): number {
   const almanac = parseAlmanac(raw);
-  return Math.min(...solve(almanac));
+  const seeds = almanac.seeds.map((seed) => path(almanac, seed));
+  return Math.min(...seeds);
 }
 
-function pt2(raw: string) {
+function pt2(raw: string): number {
+  const almanac = parseAlmanac(raw);
+  const seeds = [...almanac.seeds];
+  let ans = NaN;
+  while (seeds.length > 0) {
+    const start = seeds!.shift() ?? -1;
+    const end = seeds!.shift() ?? -1;
+    for (let i = start; i < start + end; i++) {
+      const foo = path(almanac, i);
+      if (isNaN(ans) || foo < ans) ans = foo;
+    }
+  }
+  return ans;
 }
 
 function parseAlmanac(raw: string): Almanac {
@@ -77,6 +90,18 @@ function parseSection(section: string) {
   };
 }
 
+function path(almanac: Almanac, seed: number): number {
+  let s = seed;
+  s = nextSeedNumber(almanac.seedToSoil, s);
+  s = nextSeedNumber(almanac.soilToFertilizer, s);
+  s = nextSeedNumber(almanac.fertilizerToWater, s);
+  s = nextSeedNumber(almanac.waterToLight, s);
+  s = nextSeedNumber(almanac.lightToTemperature, s);
+  s = nextSeedNumber(almanac.temperatureToHumidity, s);
+  s = nextSeedNumber(almanac.humidityToLocation, s);
+  return s;
+}
+
 function nextSeedNumber(seedMaps: SeedMap[], seed: number): number {
   for (const seedMap of seedMaps) {
     const diff = seed - seedMap.source;
@@ -85,22 +110,6 @@ function nextSeedNumber(seedMaps: SeedMap[], seed: number): number {
     }
   }
   return seed;
-}
-
-function solve(almanac: Almanac): number[] {
-  const seeds = [];
-  for (const seed of almanac.seeds) {
-    let s = seed;
-    s = nextSeedNumber(almanac.seedToSoil, s);
-    s = nextSeedNumber(almanac.soilToFertilizer, s);
-    s = nextSeedNumber(almanac.fertilizerToWater, s);
-    s = nextSeedNumber(almanac.waterToLight, s);
-    s = nextSeedNumber(almanac.lightToTemperature, s);
-    s = nextSeedNumber(almanac.temperatureToHumidity, s);
-    s = nextSeedNumber(almanac.humidityToLocation, s);
-    seeds.push(s);
-  }
-  return seeds;
 }
 
 main();

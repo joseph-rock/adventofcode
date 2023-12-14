@@ -21,6 +21,7 @@ function pt1(raw: string) {
     }
     counts.push(count);
   }
+
   return counts.reduce(
     (total, num) => total *= num,
     1,
@@ -29,14 +30,13 @@ function pt1(raw: string) {
 
 function pt2(raw: string) {
   const record = inputToRecord(raw);
+  let count = 0;
 
-  for (let i = 1; i < record.time; i++) {
-    if (i * (record.time - i) >= record.distance) {
-      return record.time - i;
-    }
+  for (let i = 0; i < record.time; i++) {
+    if (i * (record.time - i) > record.distance) count += 1;
   }
 
-  return -1;
+  return count;
 }
 
 function inputToRecordList(raw: string): Record[] {

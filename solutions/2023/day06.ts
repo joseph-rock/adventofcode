@@ -1,4 +1,4 @@
-import { input, print } from "common";
+import { input, print, toNumArray } from "common";
 
 type Record = {
   time: number;
@@ -16,8 +16,8 @@ function pt1(raw: string) {
 
   for (const record of records) {
     let count = 0;
-    for (let i = 1; i < record.time; i++) {
-      if (i * (record.time - i) > record.distance) count++;
+    for (let holdTime = 1; holdTime < record.time; holdTime++) {
+      if (holdTime * (record.time - holdTime) > record.distance) count++;
     }
     counts.push(count);
   }
@@ -32,8 +32,8 @@ function pt2(raw: string) {
   const record = inputToRecord(raw);
   let count = 0;
 
-  for (let i = 0; i < record.time; i++) {
-    if (i * (record.time - i) > record.distance) count += 1;
+  for (let holdTime = 0; holdTime < record.time; holdTime++) {
+    if (holdTime * (record.time - holdTime) > record.distance) count += 1;
   }
 
   return count;
@@ -43,14 +43,8 @@ function inputToRecordList(raw: string): Record[] {
   const records = raw
     .split("\n")
     .map((line) => line.split(":"));
-  const time = records[0][1]
-    .split(" ")
-    .map((num) => parseInt(num))
-    .filter((num) => !isNaN(num));
-  const distance = records[1][1]
-    .split(" ")
-    .map((num) => parseInt(num))
-    .filter((num) => !isNaN(num));
+  const time = toNumArray(records[0][1], " ");
+  const distance = toNumArray(records[1][1], " ");
 
   return time.map((time, index) => {
     return {

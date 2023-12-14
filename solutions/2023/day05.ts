@@ -1,4 +1,4 @@
-import { input, print } from "common";
+import { input, print, toNumArray } from "common";
 
 type Almanac = {
   seeds: number[];
@@ -19,7 +19,7 @@ type SeedMap = {
 
 function main() {
   const raw = input(2023, 5);
-  print(pt1(raw), pt2(raw));
+  print(pt1(raw));
 }
 
 function pt1(raw: string): number {
@@ -78,12 +78,7 @@ function parseSection(section: string) {
   const mapList = traits[1]
     .trim()
     .split("\n")
-    .map((entry) =>
-      entry
-        .split(" ")
-        .map((num) => parseInt(num))
-        .filter((num) => !isNaN(num))
-    );
+    .map((entry) => toNumArray(entry, " "));
   return {
     id: id,
     mapList: mapList,

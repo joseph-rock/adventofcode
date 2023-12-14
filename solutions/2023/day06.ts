@@ -7,11 +7,11 @@ type Record = {
 
 function main() {
   const raw = input(2023, 6);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
 function pt1(raw: string) {
-  const records = parseInput(raw);
+  const records = inputToRecordList(raw);
   const counts: number[] = [];
 
   for (const record of records) {
@@ -27,7 +27,19 @@ function pt1(raw: string) {
   );
 }
 
-function parseInput(raw: string): Record[] {
+function pt2(raw: string) {
+  const record = inputToRecord(raw);
+
+  for (let i = 1; i < record.time; i++) {
+    if (i * (record.time - i) >= record.distance) {
+      return record.time - i;
+    }
+  }
+
+  return -1;
+}
+
+function inputToRecordList(raw: string): Record[] {
   const records = raw
     .split("\n")
     .map((line) => line.split(":"));
@@ -46,6 +58,16 @@ function parseInput(raw: string): Record[] {
       distance: distance[index],
     };
   });
+}
+
+function inputToRecord(raw: string): Record {
+  const records = raw.replaceAll(" ", "").split("\n");
+  const time = records[0].split(":")[1];
+  const distance = records[1].split(":")[1];
+  return {
+    time: parseInt(time),
+    distance: parseInt(distance),
+  };
 }
 
 main();

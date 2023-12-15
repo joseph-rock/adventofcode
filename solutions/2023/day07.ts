@@ -34,8 +34,7 @@ const CARDS = [
 
 function main() {
   const raw = input(2023, 7);
-  pt1(raw);
-  // print(pt1(raw), pt2(raw));
+  print(pt1(raw));
 }
 
 function pt1(raw: string) {
@@ -43,12 +42,14 @@ function pt1(raw: string) {
     .split("\n")
     .map((line) => parseHand(line));
 
-  console.log(hands);
+  return hands
+    .sort((a, b) => sortHands(b, a))
+    .reduce((total, hand, i) => total += hand.bet * (i + 1), 0);
 }
 
 function parseHand(line: string): Hand {
   const hand = line.split(" ");
-  const cards = sortCards(hand[0].split(""));
+  const cards = hand[0].split("");
   const bet = parseInt(hand[1]);
   const handType = getHandType(cards);
   return {
@@ -59,9 +60,20 @@ function parseHand(line: string): Hand {
 }
 
 function sortCards(cards: string[]): string[] {
-  const sorted = cards.sort((a, b) => CARDS.indexOf(a) - CARDS.indexOf(b));
+  const copy = [...cards];
+  const sorted = copy.sort((a, b) => CARDS.indexOf(a) - CARDS.indexOf(b));
   return orderBestHand(sorted);
 }
+
+const sortHands = (a: Hand, b: Hand) => {
+  if (a.handType !== b.handType) return a.handType - b.handType;
+  for (let i = 0; i < 5; i++) {
+    if (a.cards[i] !== b.cards[i]) {
+      return CARDS.indexOf(a.cards[i]) - CARDS.indexOf(b.cards[i]);
+    }
+  }
+  return 0;
+};
 
 function orderBestHand(
   cards: string[],
@@ -89,12 +101,13 @@ function orderBestHand(
 }
 
 function getHandType(cards: string[]): HANDTYPE {
-  if (isFiveofaKind(cards)) return HANDTYPE.FiveofaKind;
-  if (isFourofaKind(cards)) return HANDTYPE.FourofaKind;
-  if (isFullHouse(cards)) return HANDTYPE.FullHouse;
-  if (isThreeofaKind(cards)) return HANDTYPE.ThreeofaKind;
-  if (isTwoPair(cards)) return HANDTYPE.TwoPair;
-  if (isOnePair(cards)) return HANDTYPE.OnePair;
+  const sorted = sortCards(cards);
+  if (isFiveofaKind(sorted)) return HANDTYPE.FiveofaKind;
+  if (isFourofaKind(sorted)) return HANDTYPE.FourofaKind;
+  if (isFullHouse(sorted)) return HANDTYPE.FullHouse;
+  if (isThreeofaKind(sorted)) return HANDTYPE.ThreeofaKind;
+  if (isTwoPair(sorted)) return HANDTYPE.TwoPair;
+  if (isOnePair(sorted)) return HANDTYPE.OnePair;
   return HANDTYPE.HighCard;
 }
 

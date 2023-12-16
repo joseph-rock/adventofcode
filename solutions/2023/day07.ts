@@ -93,7 +93,7 @@ function parseHandWildCard(line: string, order: string[]): Hand {
   const bet = parseInt(hand[1]);
 
   const sortedCards = sortCards(cards, order);
-  const converted = convertWildCard(sortedCards);
+  const converted = convertWildCard(sortedCards, "J");
   const handType = getHandType(converted);
   return {
     cards: cards,
@@ -121,37 +121,37 @@ function sortHands(a: Hand, b: Hand, order: string[]): number {
 function orderBestHand(
   cards: string[],
   ordered: string[] = [],
-  windowOffset = 4,
+  offset = 4,
 ): string[] {
-  if (windowOffset === 0 || cards.length === 1) {
+  if (offset === 0 || cards.length === 1) {
     ordered.push(...cards);
     return ordered;
   }
 
-  if (windowOffset >= cards.length) {
-    return orderBestHand(cards, ordered, windowOffset - 1);
+  if (offset >= cards.length) {
+    return orderBestHand(cards, ordered, offset - 1);
   }
 
   const copy = [...cards];
-  for (let i = 0; i < copy.length - windowOffset; i++) {
-    if (copy[i] === copy[i + windowOffset]) {
-      const best = copy.splice(i, windowOffset + 1);
+  for (let i = 0; i < copy.length - offset; i++) {
+    if (copy[i] === copy[i + offset]) {
+      const best = copy.splice(i, offset + 1);
       ordered.push(...best);
-      return orderBestHand(copy, ordered, windowOffset);
+      return orderBestHand(copy, ordered, offset);
     }
   }
-  return orderBestHand(copy, ordered, windowOffset - 1);
+  return orderBestHand(copy, ordered, offset - 1);
 }
 
-function convertWildCard(cards: string[]): string[] {
-  if (!cards.includes("J")) return cards;
+function convertWildCard(cards: string[], wild: string): string[] {
+  if (!cards.includes(wild)) return cards;
 
   const copy = [...cards];
   let first = copy[0];
-  if (first === "J") first = copy.find((c) => c !== "J") ?? first;
+  if (first === wild) first = copy.find((c) => c !== wild) ?? first;
 
   for (let i = 0; i < copy.length; i++) {
-    if (copy[i] === "J") {
+    if (copy[i] === wild) {
       copy.splice(i, 1);
       copy.unshift(first);
     }
@@ -196,9 +196,9 @@ function isOnePair(cards: string[]): boolean {
   return isPairOfSize(cards);
 }
 
-function isPairOfSize(cards: string[], windowOffset = 1): boolean {
-  for (let i = 0; i < cards.length - windowOffset; i++) {
-    if (cards[i] === cards[i + windowOffset]) {
+function isPairOfSize(cards: string[], offset = 1): boolean {
+  for (let i = 0; i < cards.length - offset; i++) {
+    if (cards[i] === cards[i + offset]) {
       return true;
     }
   }

@@ -1,11 +1,11 @@
 import { input, print } from "common";
 
-type Instructions = {
-  list: string[];
-  elements: Record<string, Element>;
+type Map = {
+  instructions: string[];
+  nodes: Record<string, Node>;
 };
 
-type Element = {
+type Node = {
   id: string;
   left: string;
   right: string;
@@ -17,44 +17,44 @@ function main() {
 }
 
 function pt1(raw: string): number {
-  const instructions = parseInstructions(raw);
+  const map = parseInstructions(raw);
 
   let count = 0;
   let index = 0;
-  let curr = instructions.elements["AAA"];
+  let curr = map.nodes["AAA"];
 
   while (curr.id !== "ZZZ") {
-    if (instructions.list[index] === "L") {
-      curr = instructions.elements[curr.left];
+    if (map.instructions[index] === "L") {
+      curr = map.nodes[curr.left];
     } else {
-      curr = instructions.elements[curr.right];
+      curr = map.nodes[curr.right];
     }
     count += 1;
-    index = count % instructions.list.length;
+    index = count % map.instructions.length;
   }
 
   return count;
 }
 
-function parseInstructions(raw: string): Instructions {
+function parseInstructions(raw: string): Map {
   const parts = raw.split("\n\n");
-  const list = parts[0].split("");
-  const elements = parts[1]
+  const instructions = parts[0].split("");
+  const lines = parts[1]
     .split("\n")
-    .map((line) => parseElement(line));
+    .map((line) => parseNode(line));
 
-  const record: Record<string, Element> = {};
-  for (const element of elements) {
-    record[element.id] = element;
+  const nodes: Record<string, Node> = {};
+  for (const line of lines) {
+    nodes[line.id] = line;
   }
 
   return {
-    list: list,
-    elements: record,
+    instructions: instructions,
+    nodes: nodes,
   };
 }
 
-function parseElement(line: string): Element {
+function parseNode(line: string): Node {
   const regex =
     /^(?<id>\w+)(?:\s\=\s\()(?<left>\w+)(?:\,\s)(?<right>\w+)(?:\))/;
   const match = line.match(regex);

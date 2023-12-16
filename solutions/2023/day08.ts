@@ -33,8 +33,9 @@ function pt2(raw: string): number {
 
   // find LCM of steps and return
 
-  const factors = nodes.map((node) => primeFactors(node.count)).flat();
-  console.log(factors);
+  const factors = nodes
+    .map((node) => primeFactors(node.count))
+    .flat();
 
   return nodes[5].count;
 }

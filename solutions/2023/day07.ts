@@ -3,7 +3,7 @@ import { input, print } from "common";
 type Hand = {
   cards: string[];
   bet: number;
-  handType: number;
+  handType: HANDTYPE;
 };
 
 enum HANDTYPE {
@@ -16,42 +16,70 @@ enum HANDTYPE {
   HighCard = 6,
 }
 
-const CARDS = [
-  "A",
-  "K",
-  "Q",
-  "J",
-  "T",
-  "9",
-  "8",
-  "7",
-  "6",
-  "5",
-  "4",
-  "3",
-  "2",
-];
-
 function main() {
   const raw = input(2023, 7);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
 function pt1(raw: string) {
+  const order = [
+    "A",
+    "K",
+    "Q",
+    "J",
+    "T",
+    "9",
+    "8",
+    "7",
+    "6",
+    "5",
+    "4",
+    "3",
+    "2",
+  ];
+
   const hands = raw
     .split("\n")
-    .map((line) => parseHand(line));
+    .map((line) => parseHand(line, order));
 
   return hands
-    .sort((a, b) => sortHands(b, a))
+    .sort((a, b) => sortHands(a, b, order))
     .reduce((total, hand, i) => total += hand.bet * (i + 1), 0);
 }
 
-function parseHand(line: string): Hand {
+function pt2(raw: string) {
+  const order = [
+    "A",
+    "K",
+    "Q",
+    "T",
+    "9",
+    "8",
+    "7",
+    "6",
+    "5",
+    "4",
+    "3",
+    "2",
+    "J",
+  ];
+
+  const hands = raw
+    .split("\n")
+    .map((line) => parseHandWildCard(line, order));
+
+  return hands
+    .sort((a, b) => sortHands(a, b, order))
+    .reduce((total, hand, i) => total += hand.bet * (i + 1), 0);
+}
+
+function parseHand(line: string, order: string[]): Hand {
   const hand = line.split(" ");
   const cards = hand[0].split("");
   const bet = parseInt(hand[1]);
-  const handType = getHandType(cards);
+
+  const sortedCards = sortCards(cards, order);
+  const handType = getHandType(sortedCards);
   return {
     cards: cards,
     bet: bet,
@@ -59,21 +87,36 @@ function parseHand(line: string): Hand {
   };
 }
 
-function sortCards(cards: string[]): string[] {
+function parseHandWildCard(line: string, order: string[]): Hand {
+  const hand = line.split(" ");
+  const cards = hand[0].split("");
+  const bet = parseInt(hand[1]);
+
+  const sortedCards = sortCards(cards, order);
+  const converted = convertWildCard(sortedCards);
+  const handType = getHandType(converted);
+  return {
+    cards: cards,
+    bet: bet,
+    handType: handType,
+  };
+}
+
+function sortCards(cards: string[], order: string[]): string[] {
   const copy = [...cards];
-  const sorted = copy.sort((a, b) => CARDS.indexOf(a) - CARDS.indexOf(b));
+  const sorted = copy.sort((a, b) => order.indexOf(a) - order.indexOf(b));
   return orderBestHand(sorted);
 }
 
-const sortHands = (a: Hand, b: Hand) => {
-  if (a.handType !== b.handType) return a.handType - b.handType;
+function sortHands(a: Hand, b: Hand, order: string[]) {
+  if (a.handType !== b.handType) return b.handType - a.handType;
   for (let i = 0; i < 5; i++) {
     if (a.cards[i] !== b.cards[i]) {
-      return CARDS.indexOf(a.cards[i]) - CARDS.indexOf(b.cards[i]);
+      return order.indexOf(b.cards[i]) - order.indexOf(a.cards[i]);
     }
   }
   return 0;
-};
+}
 
 function orderBestHand(
   cards: string[],
@@ -85,7 +128,7 @@ function orderBestHand(
     return ordered;
   }
 
-  if (windowOffset > cards.length) {
+  if (windowOffset >= cards.length) {
     return orderBestHand(cards, ordered, windowOffset - 1);
   }
 
@@ -100,14 +143,30 @@ function orderBestHand(
   return orderBestHand(copy, ordered, windowOffset - 1);
 }
 
+function convertWildCard(cards: string[]): string[] {
+  if (!cards.includes("J")) return cards;
+
+  const copy = [...cards];
+  let first = copy[0];
+  if (first === "J") first = copy.find((c) => c !== "J") ?? first;
+
+  for (let i = 0; i < copy.length; i++) {
+    if (copy[i] === "J") {
+      copy.splice(i, 1);
+      copy.unshift(first);
+    }
+  }
+
+  return copy;
+}
+
 function getHandType(cards: string[]): HANDTYPE {
-  const sorted = sortCards(cards);
-  if (isFiveofaKind(sorted)) return HANDTYPE.FiveofaKind;
-  if (isFourofaKind(sorted)) return HANDTYPE.FourofaKind;
-  if (isFullHouse(sorted)) return HANDTYPE.FullHouse;
-  if (isThreeofaKind(sorted)) return HANDTYPE.ThreeofaKind;
-  if (isTwoPair(sorted)) return HANDTYPE.TwoPair;
-  if (isOnePair(sorted)) return HANDTYPE.OnePair;
+  if (isFiveofaKind(cards)) return HANDTYPE.FiveofaKind;
+  if (isFourofaKind(cards)) return HANDTYPE.FourofaKind;
+  if (isFullHouse(cards)) return HANDTYPE.FullHouse;
+  if (isThreeofaKind(cards)) return HANDTYPE.ThreeofaKind;
+  if (isTwoPair(cards)) return HANDTYPE.TwoPair;
+  if (isOnePair(cards)) return HANDTYPE.OnePair;
   return HANDTYPE.HighCard;
 }
 

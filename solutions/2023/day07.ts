@@ -21,7 +21,7 @@ function main() {
   print(pt1(raw), pt2(raw));
 }
 
-function pt1(raw: string) {
+function pt1(raw: string): number {
   const order = [
     "A",
     "K",
@@ -47,7 +47,7 @@ function pt1(raw: string) {
     .reduce((total, hand, i) => total += hand.bet * (i + 1), 0);
 }
 
-function pt2(raw: string) {
+function pt2(raw: string): number {
   const order = [
     "A",
     "K",
@@ -108,7 +108,7 @@ function sortCards(cards: string[], order: string[]): string[] {
   return orderBestHand(sorted);
 }
 
-function sortHands(a: Hand, b: Hand, order: string[]) {
+function sortHands(a: Hand, b: Hand, order: string[]): number {
   if (a.handType !== b.handType) return b.handType - a.handType;
   for (let i = 0; i < 5; i++) {
     if (a.cards[i] !== b.cards[i]) {

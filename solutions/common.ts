@@ -14,6 +14,15 @@ export function toNumArray(input: string, deliminator = ""): number[] {
     .filter((num) => !isNaN(num));
 }
 
+export function lowestCommonMultiple(nums: number[]): number {
+  const factors = nums
+    .map((num) => primeFactors(num))
+    .flat();
+  const unique = [...new Set(factors)];
+  return unique
+    .reduce((total, num) => total *= num, 1);
+}
+
 export function primeFactors(num: number): number[] {
   const factors: number[] = [];
 

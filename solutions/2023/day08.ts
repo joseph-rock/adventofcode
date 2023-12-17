@@ -1,4 +1,4 @@
-import { input, print } from "common";
+import { input, primeFactors, print } from "common";
 
 type Network = {
   instructions: string[];
@@ -17,60 +17,27 @@ function main() {
 }
 
 function pt1(raw: string): number {
-  const map = parseInstructions(raw);
-  return count(map, map.nodes["AAA"], map.nodes["ZZZ"]);
+  const network = parseNetwork(raw);
+  return countToZZZ(network, network.nodes["AAA"]);
 }
 
 function pt2(raw: string): number {
-  const map = parseInstructions(raw);
+  const network = parseNetwork(raw);
 
-  const nodes = Object.keys(map.nodes)
+  const stepCounts = Object.keys(network.nodes)
     .filter((id) => id.charAt(2) === "A")
-    .map((id) => map.nodes[id])
-    .map((node) => countToZ(map, node));
-
-  const factors = nodes
-    .map((node) => primeFactors(node.count))
+    .map((id) => countToAnyZ(network, network.nodes[id]));
+  const allPrimeFactors = stepCounts
+    .map((count) => primeFactors(count))
     .flat();
+  const uniqueFactors = [...new Set(allPrimeFactors)];
+  const LCM = uniqueFactors
+    .reduce((total, num) => total *= num, 1);
 
-  return [...new Set(factors)].reduce((total, num) => total *= num, 1);
+  return LCM;
 }
 
-function count(map: Network, start: Node, end: Node): number {
-  let count = 0;
-  let index = 0;
-  let node = start;
-
-  while (node !== end) {
-    node = next(map, node, map.instructions[index]);
-    count += 1;
-    index = count % map.instructions.length;
-  }
-
-  return count;
-}
-
-function countToZ(map: Network, start: Node) {
-  let count = 1;
-  let index = 1;
-  let node = next(map, start, map.instructions[0]);
-
-  while (node.id.charAt(2) !== "Z") {
-    node = next(map, node, map.instructions[index]);
-    count += 1;
-    index = count % map.instructions.length;
-  }
-  return { node: node, count: count };
-}
-
-function next(map: Network, node: Node, dir: string): Node {
-  if (dir === "L") {
-    return map.nodes[node.left];
-  }
-  return map.nodes[node.right];
-}
-
-function parseInstructions(raw: string): Network {
+function parseNetwork(raw: string): Network {
   const parts = raw.split("\n\n");
   const instructions = parts[0].split("");
   const nodes = parts[1]
@@ -95,26 +62,39 @@ function parseNode(line: string): Node {
   };
 }
 
-function primeFactor(num: number): number {
-  const truncatedNum: number = Math.floor(Math.sqrt(num));
-  for (let i = 2; i <= truncatedNum; i++) {
-    if (num % i == 0) {
-      return i;
-    }
+function countToZZZ(map: Network, start: Node): number {
+  let count = 0;
+  let index = 0;
+  let node = start;
+
+  while (node.id !== "ZZZ") {
+    node = next(map, node, map.instructions[index]);
+    count += 1;
+    index = count % map.instructions.length;
   }
-  return 0;
+
+  return count;
 }
 
-function primeFactors(num: number): number[] {
-  const factors: number[] = [];
+function countToAnyZ(map: Network, start: Node) {
+  let count = 0;
+  let index = 0;
+  let node = start;
 
-  while (primeFactor(num) > 0) {
-    factors.push(primeFactor(num));
-    num = num / primeFactor(num);
+  while (node.id.charAt(2) !== "Z") {
+    node = next(map, node, map.instructions[index]);
+    count += 1;
+    index = count % map.instructions.length;
   }
-  factors.push(num);
 
-  return factors;
+  return count;
+}
+
+function next(map: Network, node: Node, dir: string): Node {
+  if (dir === "L") {
+    return map.nodes[node.left];
+  }
+  return map.nodes[node.right];
 }
 
 main();

@@ -1,4 +1,4 @@
-import { input, lowestCommonMultiple, print } from "common";
+import { input, leastCommonMultiple, print } from "common";
 
 type Network = {
   instructions: string[];
@@ -26,7 +26,7 @@ function pt2(raw: string): number {
   const stepCounts = Object.keys(network.nodes)
     .filter((id) => id.charAt(2) === "A")
     .map((id) => countToAnyZ(network, network.nodes[id]));
-  return lowestCommonMultiple(stepCounts);
+  return leastCommonMultiple(stepCounts);
 }
 
 function parseNetwork(raw: string): Network {

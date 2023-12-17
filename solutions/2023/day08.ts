@@ -1,6 +1,6 @@
 import { input, print } from "common";
 
-type Input = {
+type Network = {
   instructions: string[];
   nodes: Record<string, Node>;
 };
@@ -36,7 +36,7 @@ function pt2(raw: string): number {
   return [...new Set(factors)].reduce((total, num) => total *= num, 1);
 }
 
-function count(map: Input, start: Node, end: Node): number {
+function count(map: Network, start: Node, end: Node): number {
   let count = 0;
   let index = 0;
   let node = start;
@@ -50,7 +50,7 @@ function count(map: Input, start: Node, end: Node): number {
   return count;
 }
 
-function countToZ(map: Input, start: Node) {
+function countToZ(map: Network, start: Node) {
   let count = 1;
   let index = 1;
   let node = next(map, start, map.instructions[0]);
@@ -63,14 +63,14 @@ function countToZ(map: Input, start: Node) {
   return { node: node, count: count };
 }
 
-function next(map: Input, node: Node, dir: string): Node {
+function next(map: Network, node: Node, dir: string): Node {
   if (dir === "L") {
     return map.nodes[node.left];
   }
   return map.nodes[node.right];
 }
 
-function parseInstructions(raw: string): Input {
+function parseInstructions(raw: string): Network {
   const parts = raw.split("\n\n");
   const instructions = parts[0].split("");
   const nodes = parts[1]

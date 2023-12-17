@@ -1,8 +1,6 @@
 import { input, print } from "common";
-import { MissingCommandNameCompletionsError } from "https://deno.land/x/cliffy@v1.0.0-rc.3/command/_errors.ts";
-import { mapAccum, mapObjIndexed } from "ramda";
 
-type Map = {
+type Input = {
   instructions: string[];
   nodes: Record<string, Node>;
 };
@@ -31,16 +29,14 @@ function pt2(raw: string): number {
     .map((id) => map.nodes[id])
     .map((node) => countToZ(map, node));
 
-  // find LCM of steps and return
-
   const factors = nodes
     .map((node) => primeFactors(node.count))
     .flat();
 
-  return nodes[5].count;
+  return [...new Set(factors)].reduce((total, num) => total *= num, 1);
 }
 
-function count(map: Map, start: Node, end: Node): number {
+function count(map: Input, start: Node, end: Node): number {
   let count = 0;
   let index = 0;
   let node = start;
@@ -54,7 +50,7 @@ function count(map: Map, start: Node, end: Node): number {
   return count;
 }
 
-function countToZ(map: Map, start: Node) {
+function countToZ(map: Input, start: Node) {
   let count = 1;
   let index = 1;
   let node = next(map, start, map.instructions[0]);
@@ -67,14 +63,14 @@ function countToZ(map: Map, start: Node) {
   return { node: node, count: count };
 }
 
-function next(map: Map, node: Node, dir: string): Node {
+function next(map: Input, node: Node, dir: string): Node {
   if (dir === "L") {
     return map.nodes[node.left];
   }
   return map.nodes[node.right];
 }
 
-function parseInstructions(raw: string): Map {
+function parseInstructions(raw: string): Input {
   const parts = raw.split("\n\n");
   const instructions = parts[0].split("");
   const nodes = parts[1]

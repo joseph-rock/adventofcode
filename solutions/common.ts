@@ -13,3 +13,25 @@ export function toNumArray(input: string, deliminator = ""): number[] {
     .map((num) => parseInt(num))
     .filter((num) => !isNaN(num));
 }
+
+export function primeFactors(num: number): number[] {
+  const factors: number[] = [];
+
+  while (primeFactor(num) > 0) {
+    factors.push(primeFactor(num));
+    num = num / primeFactor(num);
+  }
+  factors.push(num);
+
+  return factors;
+}
+
+function primeFactor(num: number): number {
+  const truncatedNum: number = Math.floor(Math.sqrt(num));
+  for (let i = 2; i <= truncatedNum; i++) {
+    if (num % i == 0) {
+      return i;
+    }
+  }
+  return 0;
+}

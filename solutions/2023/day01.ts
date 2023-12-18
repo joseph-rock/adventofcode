@@ -1,4 +1,4 @@
-import { input, print } from "common";
+import { input, print, toNumArray } from "common";
 
 function main() {
   const raw = input(2023, 1);
@@ -9,7 +9,7 @@ function pt1(raw: string): number {
   const lines = raw.split("\n");
   const calibrationValues = lines
     .map((line) => {
-      const digits = digitList(line);
+      const digits = toNumArray(line);
       return digits[0] * 10 + digits[digits.length - 1];
     });
   return calibrationValues.reduce((total, num) => total + num, 0);
@@ -20,17 +20,10 @@ function pt2(raw: string): number {
   const calibrationValues = lines
     .map((line) => {
       const extractNumbers = convertWordsToNums(line);
-      const digits = digitList(extractNumbers);
+      const digits = toNumArray(extractNumbers);
       return digits[0] * 10 + digits[digits.length - 1];
     });
   return calibrationValues.reduce((total, num) => total + num, 0);
-}
-
-function digitList(line: string): number[] {
-  const list = [...line];
-  return list
-    .map((char) => parseInt(char, 10))
-    .filter((num) => !isNaN(num));
 }
 
 function convertWordsToNums(line: string): string {

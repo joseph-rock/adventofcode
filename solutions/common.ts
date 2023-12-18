@@ -10,7 +10,7 @@ export function print(pt1: string | number, pt2?: string | number): void {
 export function toNumArray(input: string, deliminator = ""): number[] {
   return input
     .split(deliminator)
-    .map((num) => parseInt(num))
+    .map((num) => parseInt(num, 10))
     .filter((num) => !isNaN(num));
 }
 
@@ -36,7 +36,7 @@ export function primeFactors(num: number): number[] {
 }
 
 function primeFactor(num: number): number {
-  const truncatedNum: number = Math.floor(Math.sqrt(num));
+  const truncatedNum = Math.floor(Math.sqrt(num));
   for (let i = 2; i <= truncatedNum; i++) {
     if (num % i == 0) {
       return i;

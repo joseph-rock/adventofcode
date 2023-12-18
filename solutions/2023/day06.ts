@@ -11,7 +11,7 @@ function main() {
 }
 
 function pt1(raw: string) {
-  const records = inputToRecordList(raw);
+  const records = parseRecordList(raw);
   const counts: number[] = [];
 
   for (const record of records) {
@@ -29,7 +29,7 @@ function pt1(raw: string) {
 }
 
 function pt2(raw: string) {
-  const record = inputToRecord(raw);
+  const record = parseRecord(raw);
   let count = 0;
 
   for (let holdTime = 0; holdTime < record.time; holdTime++) {
@@ -39,7 +39,7 @@ function pt2(raw: string) {
   return count;
 }
 
-function inputToRecordList(raw: string): Record[] {
+function parseRecordList(raw: string): Record[] {
   const records = raw
     .split("\n")
     .map((line) => line.split(":"));
@@ -54,7 +54,7 @@ function inputToRecordList(raw: string): Record[] {
   });
 }
 
-function inputToRecord(raw: string): Record {
+function parseRecord(raw: string): Record {
   const records = raw.replaceAll(" ", "").split("\n");
   const time = records[0].split(":")[1];
   const distance = records[1].split(":")[1];

@@ -3,7 +3,7 @@ import { last } from "ramda";
 
 function main() {
   const raw = input(2023, 9);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
 function pt1(raw: string) {
@@ -11,15 +11,24 @@ function pt1(raw: string) {
     .split("\n")
     .map((line) => toNumArray(line, " "));
 
-  const foo = OASISHistory.map((line) => getHistory(line));
-  const bar = foo.map((a) => extrapolateRight(a));
-  return bar.reduce((total, num) => total += num, 0);
+  return OASISHistory
+    .map((line) => expandHistory(line))
+    .map((a) => extrapolateRight(a))
+    .reduce((total, num) => total += num, 0);
 }
 
 function pt2(raw: string) {
+  const OASISHistory = raw
+    .split("\n")
+    .map((line) => toNumArray(line, " "));
+
+  return OASISHistory
+    .map((line) => expandHistory(line))
+    .map((a) => extrapolateLeft(a))
+    .reduce((total, num) => total += num, 0);
 }
 
-function getHistory(line: number[]) {
+function expandHistory(line: number[]) {
   const history: number[][] = [line];
   let next = line;
   while (next.some((num) => num !== 0)) {
@@ -37,11 +46,17 @@ function nextHistory(line: number[]) {
   return next;
 }
 
-function extrapolateRight(history: number[][]) {
+function extrapolateRight(history: number[][]): number {
   return history.reduce((total, numList) => total += last(numList), 0);
 }
 
 function extrapolateLeft(history: number[][]) {
+  let prev = 0;
+  for (let i = history.length - 1; i >= 0; i--) {
+    const curr = history[i][0];
+    prev = curr - prev;
+  }
+  return prev;
 }
 
 main();

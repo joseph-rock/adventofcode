@@ -1,8 +1,9 @@
 import { input, print, toNumArray } from "common";
+import { last } from "ramda";
 
 function main() {
   const raw = input(2023, 9);
-  pt1(raw);
+  print(pt1(raw));
 }
 
 function pt1(raw: string) {
@@ -11,7 +12,11 @@ function pt1(raw: string) {
     .map((line) => toNumArray(line, " "));
 
   const foo = OASISHistory.map((line) => getHistory(line));
-  console.log(foo);
+  const bar = foo.map((a) => extrapolateRight(a));
+  return bar.reduce((total, num) => total += num, 0);
+}
+
+function pt2(raw: string) {
 }
 
 function getHistory(line: number[]) {
@@ -32,8 +37,11 @@ function nextHistory(line: number[]) {
   return next;
 }
 
-function extrapolate(history: number[][]) {
-  return 1;
+function extrapolateRight(history: number[][]) {
+  return history.reduce((total, numList) => total += last(numList), 0);
+}
+
+function extrapolateLeft(history: number[][]) {
 }
 
 main();

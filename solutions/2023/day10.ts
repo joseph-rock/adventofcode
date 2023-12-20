@@ -211,12 +211,8 @@ function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
     let left = undefined;
 
     for (const node of line) {
-      if (node.char !== pathChar && outside) {
-        node.char = "O";
-        continue;
-      }
-      if (node.char !== pathChar && !outside) {
-        node.char = "I";
+      if (node.char !== pathChar) {
+        outside ? node.char = "O" : node.char = "I";
         continue;
       }
       // Boundary Line - flip outside

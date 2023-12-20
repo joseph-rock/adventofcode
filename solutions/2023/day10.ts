@@ -30,16 +30,9 @@ function pt2(raw: string): number {
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => setNode(char, y, x)));
   const pathMap = floodFillPath(nodeMap, "S");
-  const containedNodeMap = convertNonPathChar(pathMap.pathMap, "S");
+  const containedNodeMap = countOutsideNodes(pathMap.pathMap, "S");
 
-  return containedNodeMap.reduce(
-    (total, line) =>
-      total += line.reduce(
-        (total, node) => node.char === "I" ? total += 1 : total,
-        0,
-      ),
-    0,
-  );
+  return countOutsideNodes(pathMap.pathMap, "S");
 }
 
 function setNode(char: string, y: number, x: number): Node {
@@ -99,8 +92,10 @@ function floodFillPath(
 ): { furthestSteps: number; pathMap: Node[][] } {
   const copyMap = clone(nodeMap);
   const start = getStartNode(copyMap);
-  let active = getNeighbors(copyMap, start);
+  copyMap[start.location.y][start.location.x] = start;
+
   let steps = 0;
+  let active = getNeighbors(copyMap, start);
   const traveled: Record<string, Node> = {};
 
   while (active.length > 0) {
@@ -159,14 +154,14 @@ function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   return neighbors;
 }
 
-function convertNonPathChar(nodeMap: Node[][], pathChar: string): Node[][] {
-  const mapClone = clone(nodeMap);
-  for (const line of mapClone) {
+function countOutsideNodes(nodeMap: Node[][], pathChar: string): number {
+  let count = 0;
+  for (const line of nodeMap) {
     let outside = true;
     let left = undefined;
     for (const node of line) {
       if (node.char !== pathChar) {
-        outside ? node.char = "O" : node.char = "I";
+        outside ? count : count += 1;
       } // Boundary Line - flip outside
       else if (node.north && node.south) {
         outside = !outside;
@@ -186,7 +181,7 @@ function convertNonPathChar(nodeMap: Node[][], pathChar: string): Node[][] {
       }
     }
   }
-  return mapClone;
+  return count;
 }
 
 main();

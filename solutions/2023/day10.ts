@@ -30,8 +30,6 @@ function pt2(raw: string): number {
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => setNode(char, y, x)));
   const pathMap = floodFillPath(nodeMap, "S");
-  const containedNodeMap = countOutsideNodes(pathMap.pathMap, "S");
-
   return countOutsideNodes(pathMap.pathMap, "S");
 }
 
@@ -114,30 +112,6 @@ function floodFillPath(
   return { furthestSteps: steps, pathMap: copyMap };
 }
 
-function nodeID(node: Node): string {
-  return `${node.location.x},${node.location.y}`;
-}
-
-function getStartNode(renderedMap: Node[][]): Node {
-  const start = clone(startNode(renderedMap));
-
-  start.north = renderedMap[start.location.y - 1][start.location.x].south;
-  start.south = renderedMap[start.location.y + 1][start.location.x].north;
-  start.east = renderedMap[start.location.y][start.location.x + 1].west;
-  start.west = renderedMap[start.location.y][start.location.x - 1].east;
-
-  return start;
-}
-
-function startNode(renderedMap: Node[][]): Node {
-  for (const line of renderedMap) {
-    for (const node of line) {
-      if (node.char === "S") return node;
-    }
-  }
-  return renderedMap[0][0];
-}
-
 function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   const neighbors: Node[] = [];
 
@@ -182,6 +156,30 @@ function countOutsideNodes(nodeMap: Node[][], pathChar: string): number {
     }
   }
   return count;
+}
+
+function nodeID(node: Node): string {
+  return `${node.location.x},${node.location.y}`;
+}
+
+function getStartNode(renderedMap: Node[][]): Node {
+  const start = clone(startNode(renderedMap));
+
+  start.north = renderedMap[start.location.y - 1][start.location.x].south;
+  start.south = renderedMap[start.location.y + 1][start.location.x].north;
+  start.east = renderedMap[start.location.y][start.location.x + 1].west;
+  start.west = renderedMap[start.location.y][start.location.x - 1].east;
+
+  return start;
+}
+
+function startNode(renderedMap: Node[][]): Node {
+  for (const line of renderedMap) {
+    for (const node of line) {
+      if (node.char === "S") return node;
+    }
+  }
+  return renderedMap[0][0];
 }
 
 main();

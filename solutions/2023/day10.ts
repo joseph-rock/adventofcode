@@ -210,29 +210,29 @@ function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
     let outside = true;
     let left = undefined;
 
-    for (let i = 0; i < line.length; i++) {
-      if (line[i].char !== pathChar && outside) {
-        line[i].char = "O";
+    for (const node of line) {
+      if (node.char !== pathChar && outside) {
+        node.char = "O";
         continue;
       }
-      if (line[i].char !== pathChar && !outside) {
-        line[i].char = "I";
+      if (node.char !== pathChar && !outside) {
+        node.char = "I";
         continue;
       }
       // Boundary Line - flip outside
-      if (line[i].north && line[i].south) {
+      if (node.north && node.south) {
         outside = !outside;
         continue;
       } // Boundary Corner -- match corner to determine if flip
-      else if (line[i].north || line[i].south) {
+      else if (node.north || node.south) {
         // left corner not found
         if (left === undefined) {
-          left = line[i];
+          left = node;
           continue;
         }
         // left corner is found -- determine if edge or boundary
         // is edge - dont flip
-        if ((left.north && line[i].north) || (left.south && line[i].south)) {
+        if ((left.north && node.north) || (left.south && node.south)) {
           left = undefined;
           continue;
         } // is boundary - flip

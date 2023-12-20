@@ -9,6 +9,18 @@ type Node = {
   west: boolean;
 };
 
+type Traveler = {
+  node: Node;
+  direction: Direction;
+};
+
+enum Direction {
+  North,
+  South,
+  East,
+  West,
+}
+
 function main() {
   const raw = input(2023, 10);
   print(pt1(raw), pt2(raw));
@@ -20,10 +32,11 @@ function pt1(raw: string): number {
     .map((line) => line.split(""));
 
   const map = renderMap(rawMap);
-  const traveled: Record<string, Node> = {};
-  let active = [getStartNode(map)];
-  let count = 0;
+  const start = getStartNode(map);
 
+  const traveled: Record<string, Node> = {};
+  let active = getNeighbors(map, start);
+  let count = 0;
   while (active.length > 0) {
     const next = [];
     for (const node of active) {
@@ -36,18 +49,19 @@ function pt1(raw: string): number {
     count += 1;
   }
 
-  return count - 1;
+  return count;
 }
 
 function pt2(raw: string): number {
   const rawMap = raw
     .split("\n")
     .map((line) => line.split(""));
-  const map = renderMap(rawMap);
 
-  // Flood fill like before
+  const map = renderMap(rawMap);
+  const start = getStartNode(map);
+
   const traveled: Record<string, Node> = {};
-  let active = [getStartNode(map)];
+  let active = getNeighbors(map, start);
   while (active.length > 0) {
     const next = [];
     for (const node of active) {
@@ -60,7 +74,17 @@ function pt2(raw: string): number {
     active = next;
   }
 
-  // search for matching borders (180 vs 360 deg turns)
+  // move clockwise
+  // find start
+  let traveler: Traveler;
+  start: for (const line of map) {
+    for (let i = 0; i < line.length - 1; i++) {
+      if (line[i].east && line[i + 1].west) {
+        traveler = setTraveler(line[i]);
+        break start;
+      }
+    }
+  }
 
   return -1;
 }
@@ -164,6 +188,13 @@ function getNeighbors(map: Node[][], node: Node): Node[] {
   }
 
   return neighbors;
+}
+
+function setTraveler(node: Node): Traveler {
+  return {
+    node: node,
+    direction: Direction.East,
+  };
 }
 
 main();

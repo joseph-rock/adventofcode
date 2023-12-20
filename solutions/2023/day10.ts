@@ -9,18 +9,6 @@ type Node = {
   west: boolean;
 };
 
-type Traveler = {
-  node: Node;
-  direction: Direction;
-};
-
-enum Direction {
-  North,
-  South,
-  East,
-  West,
-}
-
 function main() {
   const raw = input(2023, 10);
   print(pt1(raw), pt2(raw));
@@ -58,7 +46,7 @@ function pt2(raw: string): number {
     .map((line) => line.split(""));
 
   const map = renderMap(rawMap);
-  const start = getStartNode(map);
+  const start = getStartNode2(map);
 
   const traveled: Record<string, Node> = {};
   let active = getNeighbors(map, start);
@@ -66,7 +54,7 @@ function pt2(raw: string): number {
     const next = [];
     for (const node of active) {
       traveled[nodeID(node)] = node;
-      node.char = "X"; // arbitrarily mark as X for path tile
+      node.char = "S"; // arbitrarily mark as S for path tile
       const neighbors = getNeighbors(map, node)
         .filter((node) => traveled[nodeID(node)] === undefined);
       next.push(...neighbors);
@@ -74,19 +62,16 @@ function pt2(raw: string): number {
     active = next;
   }
 
-  // move clockwise
-  // find start
-  let traveler: Traveler;
-  start: for (const line of map) {
-    for (let i = 0; i < line.length - 1; i++) {
-      if (line[i].east && line[i + 1].west) {
-        traveler = setTraveler(line[i]);
-        break start;
-      }
-    }
-  }
+  const foo = convertNonPathChar(map, "S");
 
-  return -1;
+  return foo.reduce(
+    (total, line) =>
+      total += line.reduce(
+        (total, node) => node.char === "I" ? total += 1 : total,
+        0,
+      ),
+    0,
+  );
 }
 
 function renderMap(rawMap: string[][]) {
@@ -161,6 +146,35 @@ function getStartNode(renderedMap: Node[][]): Node {
   return renderedMap[0][0];
 }
 
+function getStartNode2(renderedMap: Node[][]): Node {
+  let start = renderedMap[0][0];
+  for (const line of renderedMap) {
+    for (const node of line) {
+      if (node.char === "S") start = node;
+    }
+  }
+
+  start.north = false;
+  start.south = false;
+  start.east = false;
+  start.west = false;
+
+  if (renderedMap[start.location.y - 1][start.location.x].south) {
+    start.north = true;
+  }
+  if (renderedMap[start.location.y + 1][start.location.x].north) {
+    start.south = true;
+  }
+  if (renderedMap[start.location.y][start.location.x + 1].east) {
+    start.east = true;
+  }
+  if (renderedMap[start.location.y][start.location.x - 1].west) {
+    start.west = true;
+  }
+
+  return start;
+}
+
 function getNeighbors(map: Node[][], node: Node): Node[] {
   const x = node.location.x;
   const y = node.location.y;
@@ -190,11 +204,46 @@ function getNeighbors(map: Node[][], node: Node): Node[] {
   return neighbors;
 }
 
-function setTraveler(node: Node): Traveler {
-  return {
-    node: node,
-    direction: Direction.East,
-  };
+// Works... at what cost?
+function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
+  for (const line of map) {
+    let outside = true;
+    let left = undefined;
+
+    for (let i = 0; i < line.length; i++) {
+      if (line[i].char !== pathChar && outside) {
+        line[i].char = "O";
+        continue;
+      }
+      if (line[i].char !== pathChar && !outside) {
+        line[i].char = "I";
+        continue;
+      }
+      // Boundary Line - flip outside
+      if (line[i].north && line[i].south) {
+        outside = !outside;
+        continue;
+      } // Boundary Corner -- match corner to determine if flip
+      else if (line[i].north || line[i].south) {
+        // left corner not found
+        if (left === undefined) {
+          left = line[i];
+          continue;
+        }
+        // left corner is found -- determine if edge or boundary
+        // is edge - dont flip
+        if ((left.north && line[i].north) || (left.south && line[i].south)) {
+          left = undefined;
+          continue;
+        } // is boundary - flip
+        else {
+          outside = !outside;
+          left = undefined;
+        }
+      }
+    }
+  }
+  return map;
 }
 
 main();

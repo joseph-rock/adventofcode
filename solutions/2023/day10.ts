@@ -11,7 +11,7 @@ type Node = {
 
 function main() {
   const raw = input(2023, 10);
-  print(pt1(raw));
+  print(pt1(raw), pt2(raw));
 }
 
 function pt1(raw: string): number {
@@ -37,6 +37,32 @@ function pt1(raw: string): number {
   }
 
   return count - 1;
+}
+
+function pt2(raw: string): number {
+  const rawMap = raw
+    .split("\n")
+    .map((line) => line.split(""));
+  const map = renderMap(rawMap);
+
+  // Flood fill like before
+  const traveled: Record<string, Node> = {};
+  let active = [getStartNode(map)];
+  while (active.length > 0) {
+    const next = [];
+    for (const node of active) {
+      traveled[nodeID(node)] = node;
+      node.char = "X"; // arbitrarily mark as X for path tile
+      const neighbors = getNeighbors(map, node)
+        .filter((node) => traveled[nodeID(node)] === undefined);
+      next.push(...neighbors);
+    }
+    active = next;
+  }
+
+  // search for matching borders (180 vs 360 deg turns)
+
+  return -1;
 }
 
 function renderMap(rawMap: string[][]) {

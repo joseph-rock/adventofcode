@@ -1,4 +1,5 @@
 import { input, print } from "common";
+import { clone } from "ramda";
 
 type Node = {
   char: string;
@@ -15,56 +16,23 @@ function main() {
 }
 
 function pt1(raw: string): number {
-  const rawMap = raw
+  const nodeMap = raw
     .split("\n")
-    .map((line) => line.split(""));
-
-  const map = renderMap(rawMap);
-  const start = getStartNode(map);
-
-  const traveled: Record<string, Node> = {};
-  let active = getNeighbors(map, start);
-  let count = 0;
-  while (active.length > 0) {
-    const next = [];
-    for (const node of active) {
-      traveled[nodeID(node)] = node;
-      const neighbors = getNeighbors(map, node)
-        .filter((node) => traveled[nodeID(node)] === undefined);
-      next.push(...neighbors);
-    }
-    active = next;
-    count += 1;
-  }
-
-  return count;
+    .map((line) => line.split(""))
+    .map((line, y) => line.map((char, x) => setNode(char, y, x)));
+  const pathMap = floodFillPath(nodeMap, "S");
+  return pathMap.furthestSteps;
 }
 
 function pt2(raw: string): number {
-  const rawMap = raw
+  const nodeMap = raw
     .split("\n")
-    .map((line) => line.split(""));
+    .map((line) => line.split(""))
+    .map((line, y) => line.map((char, x) => setNode(char, y, x)));
+  const pathMap = floodFillPath(nodeMap, "S");
+  const containedNodeMap = convertNonPathChar(pathMap.pathMap, "S");
 
-  const map = renderMap(rawMap);
-  const start = getStartNode2(map);
-
-  const traveled: Record<string, Node> = {};
-  let active = getNeighbors(map, start);
-  while (active.length > 0) {
-    const next = [];
-    for (const node of active) {
-      traveled[nodeID(node)] = node;
-      node.char = "S"; // arbitrarily mark as S for path tile
-      const neighbors = getNeighbors(map, node)
-        .filter((node) => traveled[nodeID(node)] === undefined);
-      next.push(...neighbors);
-    }
-    active = next;
-  }
-
-  const foo = convertNonPathChar(map, "S");
-
-  return foo.reduce(
+  return containedNodeMap.reduce(
     (total, line) =>
       total += line.reduce(
         (total, node) => node.char === "I" ? total += 1 : total,
@@ -72,14 +40,6 @@ function pt2(raw: string): number {
       ),
     0,
   );
-}
-
-function renderMap(rawMap: string[][]) {
-  return rawMap
-    .map((line, y) =>
-      line
-        .map((char, x) => setNode(char, y, x))
-    );
 }
 
 function setNode(char: string, y: number, x: number): Node {
@@ -133,11 +93,48 @@ function setNode(char: string, y: number, x: number): Node {
   };
 }
 
+function floodFillPath(
+  nodeMap: Node[][],
+  pathChar: string,
+): { furthestSteps: number; pathMap: Node[][] } {
+  const copyMap = clone(nodeMap);
+  const start = getStartNode(copyMap);
+  let active = getNeighbors(copyMap, start);
+  let steps = 0;
+  const traveled: Record<string, Node> = {};
+
+  while (active.length > 0) {
+    const next = [];
+    for (const node of active) {
+      node.char = pathChar;
+      traveled[nodeID(node)] = node;
+      const neighbors = getNeighbors(copyMap, node)
+        .filter((node) => traveled[nodeID(node)] === undefined);
+      next.push(...neighbors);
+    }
+    active = next;
+    steps += 1;
+  }
+
+  return { furthestSteps: steps, pathMap: copyMap };
+}
+
 function nodeID(node: Node): string {
   return `${node.location.x},${node.location.y}`;
 }
 
 function getStartNode(renderedMap: Node[][]): Node {
+  const start = clone(startNode(renderedMap));
+
+  start.north = renderedMap[start.location.y - 1][start.location.x].south;
+  start.south = renderedMap[start.location.y + 1][start.location.x].north;
+  start.east = renderedMap[start.location.y][start.location.x + 1].west;
+  start.west = renderedMap[start.location.y][start.location.x - 1].east;
+
+  return start;
+}
+
+function startNode(renderedMap: Node[][]): Node {
   for (const line of renderedMap) {
     for (const node of line) {
       if (node.char === "S") return node;
@@ -146,88 +143,40 @@ function getStartNode(renderedMap: Node[][]): Node {
   return renderedMap[0][0];
 }
 
-function getStartNode2(renderedMap: Node[][]): Node {
-  let start = renderedMap[0][0];
-  for (const line of renderedMap) {
-    for (const node of line) {
-      if (node.char === "S") start = node;
-    }
-  }
-
-  start.north = false;
-  start.south = false;
-  start.east = false;
-  start.west = false;
-
-  if (renderedMap[start.location.y - 1][start.location.x].south) {
-    start.north = true;
-  }
-  if (renderedMap[start.location.y + 1][start.location.x].north) {
-    start.south = true;
-  }
-  if (renderedMap[start.location.y][start.location.x + 1].east) {
-    start.east = true;
-  }
-  if (renderedMap[start.location.y][start.location.x - 1].west) {
-    start.west = true;
-  }
-
-  return start;
-}
-
-function getNeighbors(map: Node[][], node: Node): Node[] {
-  const x = node.location.x;
-  const y = node.location.y;
-  const xMin = 0;
-  const yMin = 0;
-  const xMax = map[0].length;
-  const yMax = map.length;
+function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   const neighbors: Node[] = [];
 
-  // to north
-  if (y - 1 < yMax && node.north && map[y - 1][x].south) {
-    neighbors.push(map[y - 1][x]);
-  }
-  // to south
-  if (y + 1 >= yMin && node.south && map[y + 1][x].north) {
-    neighbors.push(map[y + 1][x]);
-  }
-  // to west
-  if (x - 1 >= xMin && node.west && map[y][x - 1].east) {
-    neighbors.push(map[y][x - 1]);
-  }
-  // to east
-  if (x + 1 < xMax && node.east && map[y][x + 1].west) {
-    neighbors.push(map[y][x + 1]);
-  }
+  const northNode = nodeMap[node.location.y - 1][node.location.x];
+  const southNode = nodeMap[node.location.y + 1][node.location.x];
+  const eastNode = nodeMap[node.location.y][node.location.x + 1];
+  const westNode = nodeMap[node.location.y][node.location.x - 1];
+
+  if (node.north && northNode.south) neighbors.push(northNode);
+  if (node.south && southNode.north) neighbors.push(southNode);
+  if (node.east && eastNode.west) neighbors.push(eastNode);
+  if (node.west && westNode.east) neighbors.push(westNode);
 
   return neighbors;
 }
 
-// Works... at what cost?
-function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
-  for (const line of map) {
+function convertNonPathChar(nodeMap: Node[][], pathChar: string): Node[][] {
+  const mapClone = clone(nodeMap);
+  for (const line of mapClone) {
     let outside = true;
     let left = undefined;
-
     for (const node of line) {
       if (node.char !== pathChar) {
         outside ? node.char = "O" : node.char = "I";
-        continue;
-      }
-      // Boundary Line - flip outside
-      if (node.north && node.south) {
+      } // Boundary Line - flip outside
+      else if (node.north && node.south) {
         outside = !outside;
-        continue;
-      }
-      // Boundary Corner -- determine to flip outside
-      if (node.north || node.south) {
+      } // Boundary Corner -- determine to flip outside
+      else if (node.north || node.south) {
+        // Wait for next corner
         if (left === undefined) {
           left = node;
-          continue;
-        }
-        // Edge - dont flip
-        if ((left.north && node.north) || (left.south && node.south)) {
+        } // Edge - dont flip, reset left corner
+        else if ((left.north && node.north) || (left.south && node.south)) {
           left = undefined;
         } // Boundary - flip
         else {
@@ -237,7 +186,7 @@ function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
       }
     }
   }
-  return map;
+  return mapClone;
 }
 
 main();

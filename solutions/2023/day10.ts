@@ -219,19 +219,17 @@ function convertNonPathChar(map: Node[][], pathChar: string): Node[][] {
       if (node.north && node.south) {
         outside = !outside;
         continue;
-      } // Boundary Corner -- match corner to determine if flip
-      else if (node.north || node.south) {
-        // left corner not found
+      }
+      // Boundary Corner -- determine to flip outside
+      if (node.north || node.south) {
         if (left === undefined) {
           left = node;
           continue;
         }
-        // left corner is found -- determine if edge or boundary
-        // is edge - dont flip
+        // Edge - dont flip
         if ((left.north && node.north) || (left.south && node.south)) {
           left = undefined;
-          continue;
-        } // is boundary - flip
+        } // Boundary - flip
         else {
           outside = !outside;
           left = undefined;

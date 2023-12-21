@@ -25,3 +25,7 @@ function expandSpace(space: string[][]): string[][] {
 }
 
 main();
+
+const foo = [];
+foo[1] = "x";
+console.log(foo);

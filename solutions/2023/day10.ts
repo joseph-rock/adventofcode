@@ -18,8 +18,8 @@ function pt1(raw: string): number {
   const nodeMap = raw
     .split("\n")
     .map((line) => line.split(""))
-    .map((line, y) => line.map((char, x) => setNode(char, y, x)));
-  const pathMap = setPath(nodeMap, "S");
+    .map((line, y) => line.map((char, x) => node(char, y, x)));
+  const pathMap = findPath(nodeMap, "S");
   return pathMap.furthestSteps;
 }
 
@@ -27,12 +27,12 @@ function pt2(raw: string): number {
   const nodeMap = raw
     .split("\n")
     .map((line) => line.split(""))
-    .map((line, y) => line.map((char, x) => setNode(char, y, x)));
-  const pathMap = setPath(nodeMap, "S");
+    .map((line, y) => line.map((char, x) => node(char, y, x)));
+  const pathMap = findPath(nodeMap, "S");
   return countInsideNodes(pathMap.pathMap, "S");
 }
 
-function setNode(char: string, y: number, x: number): Node {
+function node(char: string, y: number, x: number): Node {
   let north = false;
   let south = false;
   let east = false;
@@ -74,16 +74,16 @@ function setNode(char: string, y: number, x: number): Node {
   }
 
   return {
-    char: char,
-    location: { x: x, y: y },
-    north: north,
-    south: south,
-    east: east,
-    west: west,
+    char,
+    location: { x, y },
+    north,
+    south,
+    east,
+    west,
   };
 }
 
-function setPath(
+function findPath(
   nodeMap: Node[][],
   pathChar: string,
 ): { furthestSteps: number; pathMap: Node[][] } {
@@ -114,10 +114,11 @@ function setPath(
 function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   const neighbors: Node[] = [];
 
-  const northNode = nodeMap[node.location.y - 1][node.location.x];
-  const southNode = nodeMap[node.location.y + 1][node.location.x];
-  const eastNode = nodeMap[node.location.y][node.location.x + 1];
-  const westNode = nodeMap[node.location.y][node.location.x - 1];
+  const { x, y } = node.location;
+  const northNode = nodeMap[y - 1][x];
+  const southNode = nodeMap[y + 1][x];
+  const eastNode = nodeMap[y][x + 1];
+  const westNode = nodeMap[y][x - 1];
 
   if (node.north && northNode.south) neighbors.push(northNode);
   if (node.south && southNode.north) neighbors.push(southNode);
@@ -163,23 +164,23 @@ function nodeID(node: Node): string {
 
 function getStartNode(renderedMap: Node[][]): Node {
   const start = startNode(renderedMap);
-  const clone = structuredClone(start);
-
-  clone.north = renderedMap[clone.location.y - 1][clone.location.x].south;
-  clone.south = renderedMap[clone.location.y + 1][clone.location.x].north;
-  clone.east = renderedMap[clone.location.y][clone.location.x + 1].west;
-  clone.west = renderedMap[clone.location.y][clone.location.x - 1].east;
-
-  return clone;
+  const { x, y } = start!.location;
+  return {
+    char: start!.char,
+    location: start!.location,
+    north: renderedMap[y - 1][x].south,
+    south: renderedMap[y + 1][x].north,
+    east: renderedMap[y][x + 1].west,
+    west: renderedMap[y][x - 1].east,
+  };
 }
 
-function startNode(renderedMap: Node[][]): Node {
+function startNode(renderedMap: Node[][]): Node | undefined {
   for (const line of renderedMap) {
     for (const node of line) {
       if (node.char === "S") return node;
     }
   }
-  return renderedMap[0][0];
 }
 
 main();

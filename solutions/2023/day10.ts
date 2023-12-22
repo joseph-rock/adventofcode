@@ -30,7 +30,7 @@ function pt2(raw: string): number {
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => setNode(char, y, x)));
   const pathMap = floodFillPath(nodeMap, "S");
-  return countOutsideNodes(pathMap.pathMap, "S");
+  return countInsideNodes(pathMap.pathMap, "S");
 }
 
 function setNode(char: string, y: number, x: number): Node {
@@ -128,18 +128,18 @@ function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   return neighbors;
 }
 
-function countOutsideNodes(nodeMap: Node[][], pathChar: string): number {
+function countInsideNodes(nodeMap: Node[][], pathChar: string): number {
   let count = 0;
   for (const line of nodeMap) {
-    let outside = true;
+    let inside = false;
     let left = undefined;
     for (const node of line) {
       if (node.char !== pathChar) {
-        outside ? count : count += 1;
-      } // Boundary Line - flip outside
+        inside ? count += 1 : count;
+      } // Boundary Line - flip inside
       else if (node.north && node.south) {
-        outside = !outside;
-      } // Boundary Corner -- determine to flip outside
+        inside = !inside;
+      } // Boundary Corner -- determine to flip inside
       else if (node.north || node.south) {
         // Wait for next corner
         if (left === undefined) {
@@ -149,7 +149,7 @@ function countOutsideNodes(nodeMap: Node[][], pathChar: string): number {
           left = undefined;
         } // Boundary - flip
         else {
-          outside = !outside;
+          inside = !inside;
           left = undefined;
         }
       }

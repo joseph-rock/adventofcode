@@ -8,24 +8,23 @@ function main() {
 function pt1(raw: string) {
   const space = raw.split("\n")
     .map((line) => line.split(""));
-  expandSpace(space);
+  const expandedSpace = expandSpace(space);
 }
 
 function expandSpace(space: string[][]): string[][] {
-  for (let i = 0; i < space.length; i++) {
-    if (space[i].every((char) => char === ".")) {
-      space.splice(i, 0, space[i]);
-      i += 1;
+  let copy: string[][] = structuredClone(space);
+
+  return copy;
+}
+
+function rotate(array: string[][]): string[][] {
+  const rotatedArray: string[][] = structuredClone(array);
+  for (let y = 0; y < array.length; y++) {
+    for (let x = 0; x < array[y].length; x++) {
+      rotatedArray[x][y] = array[y][x];
     }
   }
-
-  // TODO: expand columns
-
-  return space;
+  return rotatedArray;
 }
 
 main();
-
-const foo = [];
-foo[1] = "x";
-console.log(foo);

@@ -1,5 +1,4 @@
 import { input, print } from "common";
-import { clone } from "ramda";
 
 type Node = {
   char: string;
@@ -20,7 +19,7 @@ function pt1(raw: string): number {
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => setNode(char, y, x)));
-  const pathMap = floodFillPath(nodeMap, "S");
+  const pathMap = setPath(nodeMap, "S");
   return pathMap.furthestSteps;
 }
 
@@ -29,7 +28,7 @@ function pt2(raw: string): number {
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => setNode(char, y, x)));
-  const pathMap = floodFillPath(nodeMap, "S");
+  const pathMap = setPath(nodeMap, "S");
   return countInsideNodes(pathMap.pathMap, "S");
 }
 
@@ -84,11 +83,11 @@ function setNode(char: string, y: number, x: number): Node {
   };
 }
 
-function floodFillPath(
+function setPath(
   nodeMap: Node[][],
   pathChar: string,
 ): { furthestSteps: number; pathMap: Node[][] } {
-  const copyMap = clone(nodeMap);
+  const copyMap = structuredClone(nodeMap);
   const start = getStartNode(copyMap);
   copyMap[start.location.y][start.location.x] = start;
 
@@ -163,14 +162,15 @@ function nodeID(node: Node): string {
 }
 
 function getStartNode(renderedMap: Node[][]): Node {
-  const start = clone(startNode(renderedMap));
+  const start = startNode(renderedMap);
+  const clone = structuredClone(start);
 
-  start.north = renderedMap[start.location.y - 1][start.location.x].south;
-  start.south = renderedMap[start.location.y + 1][start.location.x].north;
-  start.east = renderedMap[start.location.y][start.location.x + 1].west;
-  start.west = renderedMap[start.location.y][start.location.x - 1].east;
+  clone.north = renderedMap[clone.location.y - 1][clone.location.x].south;
+  clone.south = renderedMap[clone.location.y + 1][clone.location.x].north;
+  clone.east = renderedMap[clone.location.y][clone.location.x + 1].west;
+  clone.west = renderedMap[clone.location.y][clone.location.x - 1].east;
 
-  return start;
+  return clone;
 }
 
 function startNode(renderedMap: Node[][]): Node {

@@ -135,7 +135,7 @@ function countInsideNodes(nodeMap: Node[][], pathChar: string): number {
     let left = undefined;
     for (const node of line) {
       if (node.char !== pathChar) {
-        inside ? count += 1 : count;
+        if (inside) count += 1;
       } // Boundary Line - flip inside
       else if (node.north && node.south) {
         inside = !inside;

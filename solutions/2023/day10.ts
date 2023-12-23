@@ -1,5 +1,5 @@
 import { input, print } from "common";
-import { None, Option, Some } from "opt";
+import { assertExists } from "assert";
 
 type Node = {
   char: string;
@@ -110,12 +110,12 @@ function findPath(
 
 function getStartNode(nodeMap: Node[][], pathChar: string): Node {
   const location = startLocation(nodeMap);
-  location.assertSome();
+  assertExists(location, "Start Location Not Found");
 
-  const { x, y } = location.value;
+  const { x, y } = location;
   return {
     char: pathChar,
-    location: location.value,
+    location: location,
     north: nodeMap[y - 1][x].south ?? false,
     south: nodeMap[y + 1][x].north ?? false,
     east: nodeMap[y][x + 1].west ?? false,
@@ -123,13 +123,15 @@ function getStartNode(nodeMap: Node[][], pathChar: string): Node {
   };
 }
 
-function startLocation(nodeMap: Node[][]): Option<{ x: number; y: number }> {
+function startLocation(
+  nodeMap: Node[][],
+): { x: number; y: number } | undefined {
   for (const line of nodeMap) {
     for (const node of line) {
-      if (node.char === "S") return Some(node.location);
+      if (node.char === "S") return node.location;
     }
   }
-  return None;
+  return undefined;
 }
 
 function getNeighbors(nodeMap: Node[][], node: Node): Node[] {

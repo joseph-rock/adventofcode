@@ -1,4 +1,5 @@
 import { input, print } from "common";
+import { None, Option, Some } from "opt";
 
 type Node = {
   char: string;
@@ -164,10 +165,12 @@ function nodeID(node: Node): string {
 
 function getStartNode(renderedMap: Node[][]): Node {
   const start = startNode(renderedMap);
-  const { x, y } = start!.location;
+  if (!start.isSome()) throw new Error("Start Not Found");
+
+  const { x, y } = start.value.location;
   return {
-    char: start!.char,
-    location: start!.location,
+    char: start.value.char,
+    location: start.value.location,
     north: renderedMap[y - 1][x].south,
     south: renderedMap[y + 1][x].north,
     east: renderedMap[y][x + 1].west,
@@ -175,12 +178,13 @@ function getStartNode(renderedMap: Node[][]): Node {
   };
 }
 
-function startNode(renderedMap: Node[][]): Node | undefined {
+function startNode(renderedMap: Node[][]): Option<Node> {
   for (const line of renderedMap) {
     for (const node of line) {
-      if (node.char === "S") return node;
+      if (node.char === "S") return Some(node);
     }
   }
+  return None;
 }
 
 main();

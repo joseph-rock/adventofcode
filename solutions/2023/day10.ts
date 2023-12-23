@@ -165,7 +165,7 @@ function nodeID(node: Node): string {
 
 function getStartNode(renderedMap: Node[][]): Node {
   const start = startNode(renderedMap);
-  if (!start.isSome()) throw new Error("Start Not Found");
+  start.assertSome();
 
   const { x, y } = start.value.location;
   return {

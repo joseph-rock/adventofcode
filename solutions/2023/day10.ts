@@ -64,12 +64,6 @@ function node(char: string, y: number, x: number): Node {
       south = true;
       east = true;
       break;
-    case "S":
-      north = true;
-      south = true;
-      east = true;
-      west = true;
-      break;
     default:
       break;
   }
@@ -171,10 +165,10 @@ function getStartNode(renderedMap: Node[][]): Node {
   return {
     char: start.value.char,
     location: start.value.location,
-    north: renderedMap[y - 1][x].south,
-    south: renderedMap[y + 1][x].north,
-    east: renderedMap[y][x + 1].west,
-    west: renderedMap[y][x - 1].east,
+    north: renderedMap[y - 1][x].south ?? false,
+    south: renderedMap[y + 1][x].north ?? false,
+    east: renderedMap[y][x + 1].west ?? false,
+    west: renderedMap[y][x - 1].east ?? false,
   };
 }
 

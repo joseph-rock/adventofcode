@@ -20,8 +20,8 @@ function pt1(raw: string): number {
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => node(char, y, x)));
-  const pathMap = findPath(nodeMap, "S");
-  return pathMap.furthestSteps;
+  const { furthestSteps } = findPath(nodeMap);
+  return furthestSteps;
 }
 
 function pt2(raw: string): number {
@@ -29,8 +29,8 @@ function pt2(raw: string): number {
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => node(char, y, x)));
-  const pathMap = findPath(nodeMap, "S");
-  return countInsideNodes(pathMap.pathMap, "S");
+  const { pathMap } = findPath(nodeMap);
+  return countInsideNodes(pathMap);
 }
 
 function node(char: string, y: number, x: number): Node {
@@ -80,7 +80,7 @@ function node(char: string, y: number, x: number): Node {
 
 function findPath(
   nodeMap: Node[][],
-  pathChar: string,
+  pathChar = "S",
 ): { furthestSteps: number; pathMap: Node[][] } {
   const copyMap = structuredClone(nodeMap);
   const start = getStartNode(copyMap, pathChar);
@@ -88,7 +88,9 @@ function findPath(
 
   let steps = 0;
   let active = getNeighbors(copyMap, start);
+
   const traveled: Record<string, Node> = {};
+  const nodeID = (node: Node) => `${node.location.x},${node.location.y}`;
 
   while (active.length > 0) {
     const next = [];
@@ -104,6 +106,30 @@ function findPath(
   }
 
   return { furthestSteps: steps, pathMap: copyMap };
+}
+
+function getStartNode(nodeMap: Node[][], pathChar: string): Node {
+  const location = startLocation(nodeMap);
+  location.assertSome();
+
+  const { x, y } = location.value;
+  return {
+    char: pathChar,
+    location: location.value,
+    north: nodeMap[y - 1][x].south ?? false,
+    south: nodeMap[y + 1][x].north ?? false,
+    east: nodeMap[y][x + 1].west ?? false,
+    west: nodeMap[y][x - 1].east ?? false,
+  };
+}
+
+function startLocation(nodeMap: Node[][]): Option<{ x: number; y: number }> {
+  for (const line of nodeMap) {
+    for (const node of line) {
+      if (node.char === "S") return Some(node.location);
+    }
+  }
+  return None;
 }
 
 function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
@@ -123,7 +149,7 @@ function getNeighbors(nodeMap: Node[][], node: Node): Node[] {
   return neighbors;
 }
 
-function countInsideNodes(nodeMap: Node[][], pathChar: string): number {
+function countInsideNodes(nodeMap: Node[][], pathChar = "S"): number {
   let count = 0;
   for (const line of nodeMap) {
     let inside = false;
@@ -151,34 +177,6 @@ function countInsideNodes(nodeMap: Node[][], pathChar: string): number {
     }
   }
   return count;
-}
-
-function nodeID(node: Node): string {
-  return `${node.location.x},${node.location.y}`;
-}
-
-function getStartNode(nodeMap: Node[][], pathChar: string): Node {
-  const location = startLocation(nodeMap);
-  location.assertSome();
-
-  const { x, y } = location.value;
-  return {
-    char: pathChar,
-    location: location.value,
-    north: nodeMap[y - 1][x].south ?? false,
-    south: nodeMap[y + 1][x].north ?? false,
-    east: nodeMap[y][x + 1].west ?? false,
-    west: nodeMap[y][x - 1].east ?? false,
-  };
-}
-
-function startLocation(nodeMap: Node[][]): Option<{ x: number; y: number }> {
-  for (const line of nodeMap) {
-    for (const node of line) {
-      if (node.char === "S") return Some(node.location);
-    }
-  }
-  return None;
 }
 
 main();

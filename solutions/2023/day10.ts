@@ -83,7 +83,7 @@ function findPath(
   pathChar: string,
 ): { furthestSteps: number; pathMap: Node[][] } {
   const copyMap = structuredClone(nodeMap);
-  const start = getStartNode(copyMap);
+  const start = getStartNode(copyMap, pathChar);
   copyMap[start.location.y][start.location.x] = start;
 
   let steps = 0;
@@ -157,25 +157,25 @@ function nodeID(node: Node): string {
   return `${node.location.x},${node.location.y}`;
 }
 
-function getStartNode(renderedMap: Node[][]): Node {
-  const start = startNode(renderedMap);
-  start.assertSome();
+function getStartNode(nodeMap: Node[][], pathChar: string): Node {
+  const location = startLocation(nodeMap);
+  location.assertSome();
 
-  const { x, y } = start.value.location;
+  const { x, y } = location.value;
   return {
-    char: start.value.char,
-    location: start.value.location,
-    north: renderedMap[y - 1][x].south ?? false,
-    south: renderedMap[y + 1][x].north ?? false,
-    east: renderedMap[y][x + 1].west ?? false,
-    west: renderedMap[y][x - 1].east ?? false,
+    char: pathChar,
+    location: location.value,
+    north: nodeMap[y - 1][x].south ?? false,
+    south: nodeMap[y + 1][x].north ?? false,
+    east: nodeMap[y][x + 1].west ?? false,
+    west: nodeMap[y][x - 1].east ?? false,
   };
 }
 
-function startNode(renderedMap: Node[][]): Option<Node> {
-  for (const line of renderedMap) {
+function startLocation(nodeMap: Node[][]): Option<{ x: number; y: number }> {
+  for (const line of nodeMap) {
     for (const node of line) {
-      if (node.char === "S") return Some(node);
+      if (node.char === "S") return Some(node.location);
     }
   }
   return None;

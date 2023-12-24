@@ -157,24 +157,26 @@ function countInsideNodes(nodeMap: Node[][], pathChar = "S"): number {
     let inside = false;
     let left = undefined;
     for (const node of line) {
-      if (node.char !== pathChar) {
-        if (inside) count += 1;
-      } // Boundary Line - flip inside
-      else if (node.north && node.south) {
-        inside = !inside;
-      } // Boundary Corner -- determine to flip inside
-      else if (node.north || node.south) {
-        // Wait for next corner
-        if (left === undefined) {
-          left = node;
-        } // Edge - dont flip, reset left corner
-        else if ((left.north && node.north) || (left.south && node.south)) {
-          left = undefined;
-        } // Boundary - flip
-        else {
+      if (node.char === pathChar) {
+        // Boundary Line - flip inside
+        if (node.north && node.south) {
           inside = !inside;
-          left = undefined;
+        } // Boundary Corner - determine inside flip
+        else if (node.north || node.south) {
+          // Start of horizontal edge - wait for next corner
+          if (left === undefined) {
+            left = node;
+          } // True Edge - dont flip, reset left corner
+          else if ((left.north && node.north) || (left.south && node.south)) {
+            left = undefined;
+          } // Boundary - flip, reset left corner
+          else {
+            inside = !inside;
+            left = undefined;
+          }
         }
+      } else if (inside) {
+        count += 1;
       }
     }
   }

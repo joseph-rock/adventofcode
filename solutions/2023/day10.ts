@@ -79,7 +79,7 @@ function node(char: string, y: number, x: number): Node {
 }
 
 function findPath(
-  nodeMap: Node[][],
+  nodeMap: Readonly<Node[][]>,
   pathChar = "S",
 ): { furthestSteps: number; pathMap: Node[][] } {
   const copyMap = structuredClone(nodeMap);

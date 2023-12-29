@@ -16,7 +16,7 @@ function main() {
 }
 
 function pt1(raw: string): number {
-  const nodeMap = raw
+  const nodeMap: Node[][] = raw
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => node(char, y, x)));
@@ -25,7 +25,7 @@ function pt1(raw: string): number {
 }
 
 function pt2(raw: string): number {
-  const nodeMap = raw
+  const nodeMap: Node[][] = raw
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => node(char, y, x)));
@@ -109,29 +109,20 @@ function findPath(
 }
 
 function getStartNode(nodeMap: Node[][], pathChar: string): Node {
-  const location = startLocation(nodeMap);
-  assertExists(location, "Start Location Not Found");
+  const start = nodeMap
+    .flat()
+    .find((node) => node.char === "S");
+  assertExists(start, "Start Location Not Found");
 
-  const { x, y } = location;
+  const { x, y } = start.location;
   return {
     char: pathChar,
-    location: location,
+    location: start.location,
     north: nodeMap[y - 1][x].south ?? false,
     south: nodeMap[y + 1][x].north ?? false,
     east: nodeMap[y][x + 1].west ?? false,
     west: nodeMap[y][x - 1].east ?? false,
   };
-}
-
-function startLocation(
-  nodeMap: Node[][],
-): { x: number; y: number } | undefined {
-  for (const line of nodeMap) {
-    for (const node of line) {
-      if (node.char === "S") return node.location;
-    }
-  }
-  return undefined;
 }
 
 function getNeighbors(nodeMap: Node[][], node: Node): Node[] {

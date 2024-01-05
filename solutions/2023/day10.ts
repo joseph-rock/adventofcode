@@ -20,8 +20,8 @@ function pt1(raw: string): number {
     .split("\n")
     .map((line) => line.split(""))
     .map((line, y) => line.map((char, x) => node(char, y, x)));
-  const { furthestSteps } = findPath(nodeMap);
-  return furthestSteps;
+  const { steps } = findPath(nodeMap);
+  return steps;
 }
 
 function pt2(raw: string): number {
@@ -81,31 +81,30 @@ function node(char: string, y: number, x: number): Node {
 function findPath(
   nodeMap: Readonly<Node[][]>,
   pathChar = "S",
-): { furthestSteps: number; pathMap: Node[][] } {
-  const copyMap = structuredClone(nodeMap);
-  const start = getStartNode(copyMap, pathChar);
-  copyMap[start.location.y][start.location.x] = start;
+): { steps: number; pathMap: Node[][] } {
+  const pathMap = structuredClone(nodeMap);
+  const start = getStartNode(pathMap, pathChar);
+  pathMap[start.location.y][start.location.x] = start;
 
-  let steps = 0;
-  let active = getNeighbors(copyMap, start);
-
-  const traveled: Record<string, Node> = {};
   const nodeID = (node: Node) => `${node.location.x},${node.location.y}`;
+  const visited: Record<string, Node> = {};
+  let queue = getNeighbors(pathMap, start);
+  let steps = 0;
 
-  while (active.length > 0) {
+  while (queue.length > 0) {
     const next = [];
-    for (const node of active) {
+    for (const node of queue) {
       node.char = pathChar;
-      traveled[nodeID(node)] = node;
-      const neighbors = getNeighbors(copyMap, node)
-        .filter((node) => traveled[nodeID(node)] === undefined);
+      visited[nodeID(node)] = node;
+      const neighbors = getNeighbors(pathMap, node)
+        .filter((node) => visited[nodeID(node)] === undefined);
       next.push(...neighbors);
     }
-    active = next;
+    queue = next;
     steps += 1;
   }
 
-  return { furthestSteps: steps, pathMap: copyMap };
+  return { steps, pathMap };
 }
 
 function getStartNode(nodeMap: Node[][], pathChar: string): Node {
